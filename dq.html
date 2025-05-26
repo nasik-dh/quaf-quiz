@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Insight Journal - Scholarly Research on Islamic Studies</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            overflow-x: hidden;
+        }
+        
+        .journal-header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url('https://static.vecteezy.com/system/resources/previews/014/664/051/non_2x/islamic-ornament-persian-motiff-3d-ramadan-islamic-round-pattern-elements-geometric-circular-ornamental-arabic-symbol-gold-background-vector.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .article-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0 0 0.5rem 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 50;
+            display: none;
+        }
+        
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+        }
+
+        .search-result-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .search-highlight {
+            background-color: #fef3c7;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #d4af37, #f7dc6f);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #b7950b, #d4af37);
+            transform: translateY(-2px);
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        .dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover:after,
+        .nav-link.active:after {
+            width: 100%;
+        }
+        
+        .modal {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .article-card {
+                margin-bottom: 1rem;
+            }
+            
+            .hero-text {
+                font-size: 2.5rem;
+            }
+            
+            .navbar-fixed {
+                padding: 0.5rem 1rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .hero-text {
+                font-size: 2rem;
+            }
+            
+            .search-input {
+                width: 200px;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white !important;
+            }
+            
+            .navbar-fixed {
+                position: relative !important;
+            }
+            
+            .modal {
+                display: none !important;
+            }
+        }
+
+        /* Advanced search styling */
+        .advanced-search {
+            position: relative;
+        }
+
+        .advanced-search-input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .advanced-search-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            background: transparent;
+            border: none;
+            color: #d4af37;
+            cursor: pointer;
+        }
+
+        /* Category pills styling */
+        .category-pill {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .category-pill:hover {
+            background-color: #d4af37;
+            color: white;
+        }
+
+        .category-pill.active {
+            background-color: #d4af37;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification System -->
+    <div id="notification" class="notification bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="notificationText">Action completed successfully!</span>
+            <button onclick="hideNotification()" class="ml-4 text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-900 bg-opacity-95 backdrop-filter backdrop-blur-lg shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 lg:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="text-xl lg:text-2xl font-bold text-white title-font">
+                        <i class="fas fa-mosque text-yellow-400 mr-2"></i>
+                        Islamic Insight
+                    </div>
+                </div>
+                
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="search-container">
+                        <div class="relative">
+                            <input type="text" id="searchInput" placeholder="Search by title, author, or topic..." 
+                                   class="search-input pl-10 pr-4 py-2 rounded-lg text-white placeholder-gray-300 w-64 focus:outline-none"
+                                   oninput="performSearch()">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300"></i>
+                            
+                            <!-- Search Results Dropdown -->
+                            <div id="searchResults" class="search-results">
+                                <!-- Results will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openModal('loginModal')" class="text-white hover:text-yellow-400 transition-colors">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+                
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu lg:hidden fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 shadow-lg">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="text-xl font-bold text-white title-font">
+                        <i class="fas fa-mosque text-yellow-400 mr-2"></i>
+                        Islamic Insight
+                    </div>
+                    <button onclick="toggleMobileMenu()" class="text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                    <div class="pt-4 border-t border-gray-700">
+                        <div class="advanced-search relative">
+                            <input type="text" id="mobileSearchInput" placeholder="Search articles..." 
+                                  class="advanced-search-input w-full px-3 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:border-yellow-400"
+                                  oninput="performSearch('mobile')">
+                            <button class="advanced-search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <!-- Mobile Search Results -->
+                        <div id="mobileSearchResults" class="search-results bg-gray-800 border border-gray-700 mt-1">
+                            <!-- Results will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+        <!-- Hero Section -->
+        <section id="home" class="journal-header py-12 lg:py-20 text-white relative">
+            <div class="container mx-auto px-4 lg:px-6 text-center relative z-10">
+                <h1 class="hero-text title-font text-3xl md:text-5xl lg:text-7xl font-bold mb-6 fade-in">
+                    Islamic Insight Journal
+                </h1>
+                <p class="text-lg md:text-xl lg:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto fade-in">
+                    Exploring the depths of Islamic scholarship, philosophy, and contemporary thought through rigorous academic discourse
+                </p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center fade-in">
+                    <button onclick="scrollToSection('articles')" class="btn-primary px-6 lg:px-8 py-3 rounded-lg font-semibold text-gray-800 hover:text-gray-900">
+                        <i class="fas fa-book-open mr-2"></i>
+                        Latest Issue
+                    </button>
+                    <button onclick="openModal('subscribeModal')" class="border-2 border-white text-white px-6 lg:px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-all">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Subscribe
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Search Section -->
+        <section class="py-8 bg-gray-50">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800 title-font">Find Articles</h2>
+                    
+                    <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                        <div class="flex-grow">
+                            <div class="relative">
+                                <input type="text" id="advancedSearchInput" 
+                                       class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                                       placeholder="Search by title, author..."
+                                       oninput="performAdvancedSearch()">
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-48">
+                            <select id="categoryFilter" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                                    onchange="performAdvancedSearch()">
+                                <option value="">All Categories</option>
+                                <option value="Islamic Philosophy">Islamic Philosophy</option>
+                                <option value="Islamic Ethics">Islamic Ethics</option>
+                                <option value="Architecture">Architecture</option>
+                                <option value="Spirituality">Spirituality</option>
+                                <option value="Islamic Finance">Islamic Finance</option>
+                                <option value="Islamic History">Islamic History</option>
+                                <option value="Islamic Art">Islamic Art</option>
+                                <option value="Hadith Studies">Hadith Studies</option>
+                                <option value="Islamic Education">Islamic Education</option>
+                                <option value="Interfaith Studies">Interfaith Studies</option>
+                            </select>
+                        </div>
+                        
+                        <div class="md:w-48">
+                            <select id="sortFilter" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                                    onchange="performAdvancedSearch()">
+                                <option value="date">Sort by Date</option>
+                                <option value="title">Sort by Title</option>
+                                <option value="author">Sort by Author</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                   
+                    
+                    <!-- Search Metrics -->
+                    <div id="searchMetrics" class="mt-4 text-sm text-gray-500 hidden">
+                        <span id="resultsCount">0</span> results found
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="stats-card p-6 rounded-lg text-center">
+                        <i class="fas fa-file-alt text-3xl mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">250+</h3>
+                        <p>Published Articles</p>
+                    </div>
+                    <div class="stats-card p-6 rounded-lg text-center">
+                        <i class="fas fa-users text-3xl mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">100+</h3>
+                        <p>Contributing Authors</p>
+                    </div>
+                    <div class="stats-card p-6 rounded-lg text-center">
+                        <i class="fas fa-download text-3xl mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">50K+</h3>
+                        <p>Downloads</p>
+                    </div>
+                    <div class="stats-card p-6 rounded-lg text-center">
+                        <i class="fas fa-globe text-3xl mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">80+</h3>
+                        <p>Countries</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Articles Grid -->
+        <section id="articles" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                    <h2 class="title-font text-3xl lg:text-4xl font-bold text-gray-800 mb-4 md:mb-0">Featured Articles</h2>
+                </div>
+                
+                <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+                    <!-- Articles will be populated by JavaScript -->
+                </div>
+                
+                <div id="noResults" class="hidden text-center py-12">
+                    <i class="fas fa-search text-6xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">No articles found</h3>
+                    <p class="text-gray-500">Try adjusting your search or filter criteria</p>
+                </div>
+            </div>
+        </section>
+
+       
+
+        
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-16">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="title-font text-2xl font-bold mb-4">
+                            <i class="fas fa-mosque text-yellow-400 mr-2"></i>
+                            Islamic Insight
+                        </h3>
+                        <p class="text-gray-300 mb-4">A premier academic journal dedicated to Islamic scholarship, philosophy, and contemporary Islamic thought.</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-300 hover:text-yellow-400 transition-colors">
+                                <i class="fab fa-facebook-f text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-300 hover:text-yellow-400 transition-colors">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-300 hover:text-yellow-400 transition-colors">
+                                <i class="fab fa-linkedin-in text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                   
+                    
+                    
+                    
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4">Newsletter</h4>
+                        <p class="text-gray-300 mb-4">Stay updated with our latest publications and scholarly insights.</p>
+                        <div class="flex">
+                            <input type="email" id="newsletterEmail" placeholder="Your email" class="flex-1 px-3 py-2 bg-gray-700 text-white rounded-l-lg border-0 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                            <button onclick="subscribeNewsletter()" class="btn-primary px-4 py-2 rounded-r-lg">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-700 mt-12 pt-8 text-center">
+                    <p class="text-gray-300">&copy; 2024 Islamic Insight Journal. All rights reserved. | ISSN: 2786-1234</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Login</h3>
+                    <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <button type="submit" class="w-full btn-primary py-3 rounded-lg font-semibold text-gray-800">
+                        Login
+                    </button>
+                </form>
+                <div class="mt-4 text-center">
+                    <a href="#" class="text-sm text-blue-600 hover:underline">Forgot Password?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscribe Modal -->
+    <div id="subscribeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Subscribe to Journal</h3>
+                    <button onclick="closeModal('subscribeModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form onsubmit="handleSubscription(event)">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Institution</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <button type="submit" class="w-full btn-primary py-3 rounded-lg font-semibold text-gray-800">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Reading Modal -->
+    <div id="articleModal" class="modal hidden fixed inset-0 z-50">
+        <div class="bg-white w-full h-full overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b shadow-sm z-10">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <button onclick="closeModal('articleModal')" class="flex items-center text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Articles
+                    </button>
+                    <div class="flex space-x-4">
+                        <button onclick="shareArticle()" class="text-gray-600 hover:text-blue-600">
+                            <i class="fas fa-share-alt text-xl"></i>
+                        </button>
+                        <button onclick="downloadArticle()" class="text-gray-600 hover:text-green-600">
+                            <i class="fas fa-download text-xl"></i>
+                        </button>
+                        <button onclick="bookmarkArticle()" class="text-gray-600 hover:text-red-600">
+                            <i class="fas fa-bookmark text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="container mx-auto px-4 py-8 max-w-4xl">
+                <div id="fullArticleContent">
+                    <!-- Article content will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Article data
+        const articles = [
+            {
+                id: 1,
+                title: "The Philosophical Legacy of Al-Ghazali: Bridging Reason and Faith",
+                excerpt: "An in-depth exploration of Al-Ghazali's revolutionary approach to Islamic philosophy and his lasting impact on theological discourse.",
+                author: "Dr. Ahmad Hassan",
+                authorImage: "https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/aab17e9e-9103-4ed2-a40b-e8e540e9dd1c/5040b788-cb8b-4d3c-987d-8db4baa84697.png",
+                image: "https://cdn.britannica.com/08/189808-050-AEA650AB/Interior-Sultan-Ahmed-Cami-Istanbul.jpg",
+                date: "March 15, 2024",
+                category: "Islamic Philosophy",
+                readTime: "12 min read",
+                content: `
+                    <h1 class="title-font text-3xl font-bold text-gray-800 mb-6">The Philosophical Legacy of Al-Ghazali: Bridging Reason and Faith</h1>
+                    
+                    <div class="flex items-center mb-8 text-gray-600">
+                        <img src="https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/aab17e9e-9103-4ed2-a40b-e8e540e9dd1c/5040b788-cb8b-4d3c-987d-8db4baa84697.png" alt="Dr. Ahmad Hassan" class="author-avatar mr-4">
+                        <div>
+                            <p class="font-semibold">Dr. Ahmad Hassan</p>
+                            <p class="text-sm">March 15, 2024 • 12 min read</p>
+                        </div>
+                    </div>
+                    
+                    <img src="https://cdn.britannica.com/08/189808-050-AEA650AB/Interior-Sultan-Ahmed-Cami-Istanbul.jpg" alt="Islamic Architecture" class="w-full h-64 object-cover rounded-lg mb-8">
+                    
+                    <div class="prose prose-lg max-w-none">
+                        <p>Abu Hamid Muhammad ibn Muhammad al-Ghazali (1058-1111 CE) stands as one of the most influential figures in Islamic intellectual history. His profound contributions to philosophy, theology, and spirituality continue to resonate in contemporary Islamic thought, offering a sophisticated framework for understanding the relationship between reason and faith.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">The Crisis of Certainty</h2>
+                        <p>Al-Ghazali's philosophical journey began with a profound crisis of certainty that led him to question the foundations of knowledge itself. In his autobiographical work "Al-Munqidh min al-Dalal" (The Deliverer from Error), he describes his methodical doubt that preceded Cartesian skepticism by several centuries.</p>
+                        
+                        <p>This intellectual crisis emerged from his deep engagement with the philosophical works of his predecessors, particularly the Aristotelian philosophy as interpreted by Al-Farabi and Ibn Sina (Avicenna). Al-Ghazali found himself confronting fundamental questions about the nature of knowledge, reality, and religious truth.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">The Critique of the Philosophers</h2>
+                        <p>Al-Ghazali's most famous philosophical work, "Tahafut al-Falasifa" (The Incoherence of the Philosophers), represents a systematic critique of Aristotelian philosophy as it had been developed in the Islamic world. In this work, he challenges twenty key philosophical positions, arguing that philosophical reasoning alone cannot provide certain knowledge about metaphysical realities.</p>
+                        
+                        <p>His critique was not a wholesale rejection of reason, but rather a careful delineation of its proper scope and limitations. Al-Ghazali argued that while reason is valuable in mathematics, logic, and empirical sciences, it becomes unreliable when dealing with ultimate metaphysical questions about God, the soul, and the afterlife.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">The Integration of Mystical Experience</h2>
+                        <p>Following his philosophical crisis, Al-Ghazali turned to Sufism, finding in mystical experience a source of knowledge that complemented rational inquiry. His work "Ihya Ulum al-Din" (The Revival of the Religious Sciences) represents his mature synthesis of orthodox Islamic theology, philosophical rigor, and mystical insight.</p>
+                        
+                        <p>This integration was revolutionary in its time, as it provided a framework for understanding religious knowledge that neither rejected reason nor elevated it above its proper place. Al-Ghazali argued that mystical experience, when properly disciplined and guided by Islamic principles, could provide direct knowledge of spiritual realities.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Contemporary Relevance</h2>
+                        <p>Al-Ghazali's approach to the relationship between reason and faith remains remarkably relevant to contemporary discussions in Islamic philosophy and theology. His sophisticated epistemology offers resources for addressing modern challenges such as the relationship between science and religion, the nature of religious knowledge, and the role of spiritual experience in human understanding.</p>
+                        
+                        <p>Modern Muslim intellectuals continue to draw on Al-Ghazali's insights in developing contemporary Islamic responses to secular philosophy, scientific materialism, and religious fundamentalism. His emphasis on the complementarity of different forms of knowledge provides a nuanced alternative to both religious anti-intellectualism and secular rationalism.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
+                        <p>Al-Ghazali's philosophical legacy lies not in any single doctrine or argument, but in his sophisticated approach to the fundamental questions of human knowledge and spiritual reality. His work demonstrates that serious philosophical engagement need not lead to religious skepticism, while rigorous spiritual discipline can inform and enrich intellectual inquiry.</p>
+                        
+                        <p>As contemporary Islamic thought continues to grapple with questions of modernity, tradition, and authenticity, Al-Ghazali's model of intellectual rigor combined with spiritual depth offers valuable resources for constructive engagement with both classical Islamic sources and contemporary challenges.</p>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                title: "Islamic Ethics in Digital Age: Navigating Moral Complexities",
+                excerpt: "Examining how traditional Islamic ethical principles apply to contemporary digital challenges and technological innovations.",
+                author: "Dr. Fatima Al-Zahra",
+                authorImage: "https://file.aiquickdraw.com/imgcompressed/img/compressed_83111b23b0215f866cf8e09e36ff5f09.webp",
+                image: "https://smarthistory.org/wp-content/uploads/2022/01/7610938518_b4de6099f9_o-scaled-e1643150500424.jpg",
+                date: "March 12, 2024",
+                category: "Islamic Ethics",
+                readTime: "10 min read",
+                content: `
+                    <h1 class="title-font text-3xl font-bold text-gray-800 mb-6">Islamic Ethics in Digital Age: Navigating Moral Complexities</h1>
+                    
+                    <div class="flex items-center mb-8 text-gray-600">
+                        <img src="https://file.aiquickdraw.com/imgcompressed/img/compressed_83111b23b0215f866cf8e09e36ff5f09.webp" alt="Dr. Fatima Al-Zahra" class="author-avatar mr-4">
+                        <div>
+                            <p class="font-semibold">Dr. Fatima Al-Zahra</p>
+                            <p class="text-sm">March 12, 2024 • 10 min read</p>
+                        </div>
+                    </div>
+                    
+                    <img src="https://smarthistory.org/wp-content/uploads/2022/01/7610938518_b4de6099f9_o-scaled-e1643150500424.jpg" alt="Islamic Manuscript" class="w-full h-64 object-cover rounded-lg mb-8">
+                    
+                    <div class="prose prose-lg max-w-none">
+                        <p>The rapid advancement of digital technologies presents unprecedented challenges for Islamic ethics and moral reasoning. As Muslims navigate an increasingly connected world, the need to apply traditional Islamic ethical principles to contemporary digital dilemmas becomes ever more pressing.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Foundational Principles</h2>
+                        <p>Islamic ethics, rooted in the Quran and Prophetic tradition (Sunnah), provides a comprehensive framework for moral decision-making. The fundamental principles of justice (adl), beneficence (ihsan), harm prevention (la darar wa la dirar), and accountability (taklif) offer guidance for navigating digital ethical challenges.</p>
+                        
+                        <p>These principles emphasize the importance of intention (niyyah) in all actions, the consideration of consequences for both individual and communal well-being, and the recognition of human dignity and rights in all interactions, whether physical or virtual.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Privacy and Digital Rights</h2>
+                        <p>The Islamic concept of privacy (hifz al-'awrah) extends beyond physical modesty to encompass the protection of personal information and digital privacy. The Quranic injunction against spying (tajassus) takes on new significance in an era of data collection, surveillance, and algorithmic tracking.</p>
+                        
+                        <p>Islamic ethics demands that digital platforms and technologies respect user privacy, obtain genuine consent for data usage, and ensure that personal information is not exploited for harmful purposes. The principle of amanah (trust) requires that those handling personal data do so with utmost integrity and responsibility.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Social Media and Community Building</h2>
+                        <p>Social media platforms offer unprecedented opportunities for building Muslim communities and sharing Islamic knowledge. However, they also present challenges related to the spread of misinformation, cyberbullying, and the erosion of meaningful human connections.</p>
+                        
+                        <p>The Islamic emphasis on truthfulness (sidq) and verification (tabayyun) requires Muslims to fact-check information before sharing it. The prohibition against backbiting (ghibah) and slander (buhtan) applies equally to digital communications, demanding careful consideration of how we speak about others online.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Artificial Intelligence and Human Agency</h2>
+                        <p>The development of artificial intelligence raises profound questions about human agency, responsibility, and the nature of intelligence itself. Islamic theology's emphasis on human beings as trustees (khalifah) of creation suggests both opportunities and obligations in developing AI technologies.</p>
+                        
+                        <p>Islamic ethics demands that AI development prioritize human welfare, avoid reinforcing social inequalities, and maintain human agency in important decisions. The concept of hikma (wisdom) requires that technological capabilities be developed and deployed with careful consideration of their broader implications for human flourishing.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Economic Justice in Digital Markets</h2>
+                        <p>Digital platforms have created new forms of economic activity that raise questions about fairness, exploitation, and justice. Islamic principles of economic ethics, including the prohibition of excessive uncertainty (gharar) and exploitation (zulm), provide frameworks for evaluating these new economic models.</p>
+                        
+                        <p>The gig economy, cryptocurrency, and digital marketplaces all require careful examination through the lens of Islamic commercial law (mu'amalat) to ensure that they promote justice and shared prosperity rather than exploitation and inequality.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Environmental Stewardship in the Digital Age</h2>
+                        <p>The environmental impact of digital technologies, from energy-intensive data centers to electronic waste, connects to the Islamic principle of environmental stewardship (hifz al-bi'ah). The Quranic concept of balance (mizan) in creation calls for sustainable approaches to technological development.</p>
+                        
+                        <p>Muslims have a responsibility to consider the environmental costs of their digital consumption and to advocate for sustainable practices in the technology sector. This includes supporting renewable energy for data centers, responsible disposal of electronic devices, and mindful consumption of digital services.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
+                        <p>Navigating the ethical complexities of the digital age requires both deep understanding of Islamic ethical principles and careful analysis of contemporary technological realities. The timeless values of Islam provide stable foundations for moral reasoning, while the dynamic nature of Islamic jurisprudence (fiqh) allows for contextual applications to new situations.</p>
+                        
+                        <p>As Muslim communities continue to engage with digital technologies, the development of sophisticated Islamic frameworks for digital ethics becomes increasingly important. This requires collaboration between Islamic scholars, technology experts, and community leaders to ensure that technological progress serves human flourishing and divine guidance.</p>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "The Golden Age of Islamic Architecture: Lessons for Modern Design",
+                excerpt: "Exploring the timeless principles of Islamic architectural design and their relevance to contemporary sustainable architecture.",
+                author: "Prof. Omar Mansouri",
+                authorImage: "https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/66b50412-a5fa-4d9b-8ed3-7dd0c9dca81a/03d1dba7-9d95-4c20-8b9a-687d5c837047.png",
+                image: "https://mymodernmet.com/wp/wp-content/uploads/2018/04/islamic-architecture-1.jpg",
+                date: "March 10, 2024",
+                category: "Architecture",
+                readTime: "15 min read",
+                content: `
+                    <h1 class="title-font text-3xl font-bold text-gray-800 mb-6">The Golden Age of Islamic Architecture: Lessons for Modern Design</h1>
+                    
+                    <div class="flex items-center mb-8 text-gray-600">
+                        <img src="https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/66b50412-a5fa-4d9b-8ed3-7dd0c9dca81a/03d1dba7-9d95-4c20-8b9a-687d5c837047.png" alt="Prof. Omar Mansouri" class="author-avatar mr-4">
+                        <div>
+                            <p class="font-semibold">Prof. Omar Mansouri</p>
+                            <p class="text-sm">March 10, 2024 • 15 min read</p>
+                        </div>
+                    </div>
+                    
+                    <img src="https://mymodernmet.com/wp/wp-content/uploads/2018/04/islamic-architecture-1.jpg" alt="Islamic Architecture" class="w-full h-64 object-cover rounded-lg mb-8">
+                    
+                    <div class="prose prose-lg max-w-none">
+                        <p>The architectural achievements of the Islamic Golden Age (8th-13th centuries CE) represent one of humanity's greatest contributions to the built environment. From the soaring minarets of Damascus to the intricate muqarnas of Granada, Islamic architecture developed sophisticated design principles that harmonized spiritual, environmental, and aesthetic considerations.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Foundational Design Principles</h2>
+                        <p>Islamic architecture emerged from a unique synthesis of pre-Islamic building traditions, Islamic theological principles, and innovative engineering solutions. The fundamental concept of tawhid (divine unity) influenced architectural design through emphasis on geometric patterns, mathematical precision, and the integration of diverse elements into harmonious wholes.</p>
+                        
+                        <p>The principle of hijab (privacy) shaped the development of interior courtyards, mashrabiya screens, and complex circulation patterns that provided both privacy and environmental comfort. These design solutions demonstrated sophisticated understanding of human psychology, social relationships, and climatic considerations.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Environmental Harmony and Sustainability</h2>
+                        <p>Islamic architects developed remarkable passive environmental control systems that minimized energy consumption while maximizing human comfort. The use of courtyards, wind towers (malqaf), and thermal mass demonstrated sophisticated understanding of regional climate patterns and building physics.</p>
+                        
+                        <p>Water features, from simple fountains to elaborate canal systems, provided both aesthetic pleasure and environmental cooling through evaporation. Gardens were integrated into architectural designs not merely for beauty, but as essential components of environmental control systems that modified microclimates and improved air quality.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Geometric Patterns and Mathematical Precision</h2>
+                        <p>The development of complex geometric patterns in Islamic architecture reflected both aesthetic sensibilities and profound mathematical understanding. These patterns, based on principles of symmetry, proportion, and infinite extension, created visual experiences that transcended mere decoration to become spiritual and intellectual exercises.</p>
+                        
+                        <p>The use of mathematical ratios, particularly the golden ratio and root rectangles, in planning and proportioning buildings demonstrated sophisticated understanding of harmony and proportion. These mathematical principles created spaces that felt naturally balanced and aesthetically pleasing to human perception.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Material Innovation and Craftsmanship</h2>
+                        <p>Islamic architects pioneered numerous structural and decorative innovations, including sophisticated muqarnas (honeycomb vaulting), pointed arches, and complex geometric tile work. These innovations were not merely aesthetic but often served important structural and environmental functions.</p>
+                        
+                        <p>The tradition of skilled craftsmanship, passed down through generations of master builders, ensured that theoretical design principles were realized with exceptional technical precision. This integration of design intelligence and craft skill produced buildings of remarkable durability and beauty.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Urban Planning and Community Integration</h2>
+                        <p>Islamic cities developed organic urban patterns that prioritized community relationships, environmental comfort, and economic efficiency. The integration of mosques, markets, residential areas, and educational institutions created walkable neighborhoods that fostered social cohesion and cultural continuity.</p>
+                        
+                        <p>Public spaces, from mosque courtyards to market squares, were designed to accommodate diverse community activities while maintaining appropriate levels of privacy and security. These urban design principles created cities that were both economically productive and socially harmonious.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Contemporary Applications</h2>
+                        <p>Modern architects and urban planners are rediscovering the relevance of Islamic design principles for contemporary challenges including climate change, urbanization, and social fragmentation. Passive environmental control strategies developed in Islamic architecture offer alternatives to energy-intensive modern building systems.</p>
+                        
+                        <p>The integration of private and public spaces in Islamic architecture provides models for creating dense urban environments that maintain human-scale community relationships. Geometric design principles offer inspiration for contemporary architectural forms that combine aesthetic beauty with structural efficiency.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Sustainable Design Legacy</h2>
+                        <p>Perhaps the most important legacy of Islamic architecture for contemporary design is its demonstration that beautiful, functional buildings can be created using local materials, passive environmental systems, and human-scale planning principles. This approach offers valuable alternatives to resource-intensive contemporary building practices.</p>
+                        
+                        <p>The emphasis on long-term durability, cultural continuity, and community integration in Islamic architecture provides models for sustainable development that extend beyond mere environmental considerations to encompass social and cultural sustainability.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
+                        <p>The architectural achievements of the Islamic Golden Age demonstrate that exceptional design emerges from the integration of spiritual principles, environmental responsiveness, mathematical precision, and skilled craftsmanship. These lessons remain profoundly relevant for contemporary architects and planners seeking to create buildings and cities that serve both human needs and environmental sustainability.</p>
+                        
+                        <p>As the world faces unprecedented challenges of climate change and urbanization, the wisdom embedded in Islamic architectural traditions offers valuable resources for developing more sustainable and humane approaches to the built environment. The challenge lies in adapting these principles to contemporary contexts while maintaining their essential insights about the relationship between human beings, the natural environment, and the divine order.</p>
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                title: "Sufism and Contemporary Spirituality: Bridging Ancient Wisdom and Modern Seeking",
+                excerpt: "An examination of how Sufi spiritual practices and philosophical insights address contemporary spiritual needs and psychological understanding.",
+                author: "Dr. Amina Waheed",
+                authorImage: "https://file.aiquickdraw.com/imgcompressed/img/compressed_69390cf9d67bc18f9977b9ff68de9779.webp",
+                image: "https://renovatio.zaytuna.edu/assets/images/Sheikh_Lotf_Allah_3D_aa.jpg",
+                date: "March 8, 2024",
+                category: "Spirituality",
+                readTime: "11 min read",
+                content: `
+                    <h1 class="title-font text-3xl font-bold text-gray-800 mb-6">Sufism and Contemporary Spirituality: Bridging Ancient Wisdom and Modern Seeking</h1>
+                    
+                    <div class="flex items-center mb-8 text-gray-600">
+                        <img src="https://file.aiquickdraw.com/imgcompressed/img/compressed_69390cf9d67bc18f9977b9ff68de9779.webp" alt="Dr. Amina Waheed" class="author-avatar mr-4">
+                        <div>
+                            <p class="font-semibold">Dr. Amina Waheed</p>
+                            <p class="text-sm">March 8, 2024 • 11 min read</p>
+                        </div>
+                    </div>
+                    
+                    <img src="https://renovatio.zaytuna.edu/assets/images/Sheikh_Lotf_Allah_3D_aa.jpg" alt="Islamic Spiritual Art" class="w-full h-64 object-cover rounded-lg mb-8">
+                    
+                    <div class="prose prose-lg max-w-none">
+                        <p>In an era marked by spiritual searching, psychological fragmentation, and the quest for authentic meaning, the mystical tradition of Islam—Sufism—offers profound insights and practical methodologies for spiritual development. The convergence of ancient Sufi wisdom with contemporary understanding of consciousness, psychology, and human development reveals remarkable parallels and complementary approaches to human flourishing.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">The Heart of Sufi Teaching</h2>
+                        <p>Sufism, or tasawwuf, represents the esoteric dimension of Islam, focusing on the inner purification of the heart (qalb) and the direct experiential knowledge of divine reality. Unlike purely intellectual approaches to spirituality, Sufism emphasizes transformative practice, emotional intelligence, and the cultivation of spiritual states (ahwal) and stations (maqamat).</p>
+                        
+                        <p>The Sufi emphasis on the "polishing of the heart" resonates strongly with contemporary understanding of emotional regulation, mindfulness practice, and psychological healing. The systematic approach to spiritual development found in Sufi literature parallels modern approaches to personal growth and self-actualization.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Contemplative Practices and Modern Mindfulness</h2>
+                        <p>Sufi contemplative practices, including dhikr (remembrance of God), muraqaba (meditation), and sohbet (spiritual conversation), bear striking similarities to mindfulness-based interventions now widely used in psychotherapy and stress reduction. Both traditions emphasize present-moment awareness, the observation of mental states, and the cultivation of inner peace.</p>
+                        
+                        <p>The Sufi practice of breath awareness (latif points) and heart-centered meditation aligns closely with contemporary research on the psychophysiological benefits of contemplative practice. Studies on the effects of dhikr have shown measurable improvements in stress reduction, emotional regulation, and overall well-being.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Psychology of the Nafs and Shadow Work</h2>
+                        <p>The Sufi understanding of the nafs (ego-self) and its various stages of development offers sophisticated psychological insights that parallel depth psychology and transpersonal psychology. The classical description of the nafs ammara (commanding self), nafs lawwama (self-reproaching self), and nafs mutma'inna (peaceful self) provides a framework for understanding psychological development and moral growth.</p>
+                        
+                        <p>This psychological mapping resonates with Jungian concepts of shadow work, ego development, and individuation. The Sufi emphasis on confronting and transforming negative psychological patterns through spiritual practice offers practical methodologies for psychological healing and growth.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Community and Spiritual Guidance</h2>
+                        <p>The Sufi tradition's emphasis on spiritual community (sohbet) and mentorship (the murshid-murid relationship) addresses contemporary challenges of isolation, lack of meaning, and the absence of wisdom traditions in modern life. The structured approach to spiritual guidance found in Sufi orders provides models for contemporary spiritual direction and therapeutic relationships.</p>
+                        
+                        <p>The integration of individual practice with community support reflects current understanding of the social dimensions of healing and growth. Research on the importance of social connection for mental health validates the Sufi insight that spiritual development occurs within the context of meaningful relationships.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Sacred Art and Aesthetic Healing</h2>
+                        <p>Sufi contributions to poetry, music, and visual art demonstrate sophisticated understanding of the healing and transformative power of aesthetic experience. The use of poetry by masters like Rumi and Hafez, the development of sacred music (sama'), and the creation of sacred calligraphy and architecture all reflect deep insights into the relationship between beauty and spiritual development.</p>
+                        
+                        <p>Contemporary research on art therapy, music therapy, and the psychological benefits of aesthetic experience validates the Sufi integration of artistic practice with spiritual development. The emphasis on beauty as a pathway to divine experience offers resources for addressing contemporary spiritual seeking through creative expression.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Interfaith Dialogue and Universal Wisdom</h2>
+                        <p>The mystical dimensions of Sufism have historically facilitated dialogue between different religious traditions, offering a language of spiritual experience that transcends sectarian boundaries. Contemporary interfaith dialogue and the search for universal spiritual principles find rich resources in Sufi literature and practice.</p>
+                        
+                        <p>The Sufi emphasis on the unity of being (wahdat al-wujud) and the universality of spiritual experience provides frameworks for understanding religious diversity while maintaining appreciation for the depth and specificity of particular traditions. This perspective offers valuable resources for contemporary spiritual seeking that honors both universal principles and particular practices.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Challenges and Adaptations</h2>
+                        <p>The adaptation of Sufi teachings to contemporary contexts requires careful attention to both preserving essential spiritual insights and making them accessible to modern practitioners. Issues of cultural translation, the role of traditional authority structures, and the integration of contemporary psychological understanding with classical spiritual teachings present ongoing challenges.</p>
+                        
+                        <p>Contemporary Sufi teachers and practitioners are developing new approaches that maintain the transformative power of traditional practices while addressing the specific needs and challenges of modern life. This includes the development of secular applications of Sufi principles and the integration of Sufi practices with contemporary therapeutic modalities.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
+                        <p>The wisdom tradition of Sufism offers profound resources for addressing contemporary spiritual and psychological needs. The sophisticated understanding of consciousness, the practical methodologies for inner development, and the integration of individual practice with community support found in Sufi teaching remain remarkably relevant for contemporary spiritual seeking and psychological healing.</p>
+                        
+                        <p>As modern society continues to grapple with questions of meaning, purpose, and authentic spiritual development, the depth and practical wisdom of the Sufi tradition provide valuable resources for both individual seekers and those working in the fields of psychology, spirituality, and human development. The challenge lies in making these resources accessible while maintaining their transformative power and essential insights.</p>
+                    </div>
+                `
+            },
+            {
+                id: 5,
+                title: "Islamic Banking and Sustainable Finance: Principles for Ethical Economics",
+                excerpt: "Exploring how Islamic financial principles offer frameworks for sustainable and ethical economic development in the contemporary global economy.",
+                author: "Dr. Khalid Rahman",
+                authorImage: "https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/9065f59f-bd90-4e8a-ba89-712afd967890/0c10b9ce-2e53-4cc3-ab35-e6e5959d28b7.png",
+                image: "https://kharchoufa.com/en/wp-content/uploads/2024/10/The-Beauty-of-Islamic-Art-A-Journey-Through-History.jpg",
+                date: "March 5, 2024",
+                category: "Islamic Finance",
+                readTime: "13 min read",
+                content: `
+                    <h1 class="title-font text-3xl font-bold text-gray-800 mb-6">Islamic Banking and Sustainable Finance: Principles for Ethical Economics</h1>
+                    
+                    <div class="flex items-center mb-8 text-gray-600">
+                        <img src="https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/9065f59f-bd90-4e8a-ba89-712afd967890/0c10b9ce-2e53-4cc3-ab35-e6e5959d28b7.png" alt="Dr. Khalid Rahman" class="author-avatar mr-4">
+                        <div>
+                            <p class="font-semibold">Dr. Khalid Rahman</p>
+                            <p class="text-sm">March 5, 2024 • 13 min read</p>
+                        </div>
+                    </div>
+                    
+                    <img src="https://kharchoufa.com/en/wp-content/uploads/2024/10/The-Beauty-of-Islamic-Art-A-Journey-Through-History.jpg" alt="Islamic Art and Economy" class="w-full h-64 object-cover rounded-lg mb-8">
+                    
+                    <div class="prose prose-lg max-w-none">
+                        <p>As the global financial system grapples with challenges of sustainability, inequality, and ethical responsibility, Islamic banking and finance principles offer compelling alternatives that prioritize social justice, environmental stewardship, and shared prosperity. The intersection of Islamic financial principles with contemporary sustainable finance movements reveals remarkable convergences and opportunities for creating more ethical economic systems.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Foundational Principles of Islamic Finance</h2>
+                        <p>Islamic finance operates on several key principles that distinguish it from conventional financial systems. The prohibition of riba (usury/interest) encourages risk-sharing rather than risk-shifting, while the emphasis on tangible assets and real economic activity prevents speculative bubbles and financial instability.</p>
+                        
+                        <p>The principle of gharar (excessive uncertainty) limits speculative transactions that do not contribute to real economic value, while the concept of haram (forbidden) investments excludes activities harmful to society such as gambling, alcohol, and weapons manufacturing. These principles create financial systems inherently oriented toward social responsibility and sustainable development.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Risk-Sharing and Financial Stability</h2>
+                        <p>The Islamic financial emphasis on profit-and-loss sharing (mudarabah and musharakah) creates more stable financial relationships between investors and entrepreneurs. Unlike conventional debt-based financing, these arrangements align the interests of capital providers with productive activities, reducing systemic financial risks.</p>
+                        
+                        <p>Research has shown that Islamic banks demonstrated greater resilience during the 2008 financial crisis compared to conventional banks, largely due to their asset-backed financing models and prohibition of speculative investments. This resilience suggests that Islamic financial principles could contribute to more stable global financial systems.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Environmental Stewardship and Green Finance</h2>
+                        <p>The Islamic concept of stewardship (khalifah) creates strong foundations for environmental responsibility in financial decision-making. The Quranic emphasis on balance (mizan) in creation and the prohibition of waste (israf) align closely with contemporary environmental, social, and governance (ESG) investment criteria.</p>
+                        
+                        <p>Islamic financial institutions are increasingly developing green sukuk (Islamic bonds) and sustainable investment products that finance renewable energy, sustainable agriculture, and environmental protection projects. These developments demonstrate the natural alignment between Islamic values and environmental sustainability.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Social Justice and Financial Inclusion</h2>
+                        <p>The Islamic emphasis on social justice ('adl) and the obligation of zakat (wealth redistribution) create strong imperatives for financial inclusion and poverty reduction. Islamic microfinance institutions and social impact investment vehicles demonstrate practical applications of these principles.</p>
+                        
+                        <p>The development of Islamic social finance, including waqf (religious endowments) and qard hasan (benevolent loans), provides alternative models for addressing social needs without creating debt burdens for vulnerable populations. These institutions offer valuable lessons for contemporary efforts to promote financial inclusion and social development.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Technology and Islamic Fintech Innovation</h2>
+                        <p>The intersection of Islamic finance principles with financial technology creates new opportunities for developing more inclusive and efficient financial services. Blockchain technology, for example, offers possibilities for creating transparent and efficient Islamic financial contracts while maintaining compliance with Shariah principles.</p>
+                        
+                        <p>Digital platforms are making Islamic financial products more accessible to global Muslim populations while also attracting non-Muslim investors interested in ethical investment alternatives. The development of robo-advisors for Shariah-compliant investment and digital zakat collection systems demonstrates the innovative potential of Islamic fintech.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Challenges and Opportunities</h2>
+                        <p>Despite its potential benefits, Islamic finance faces challenges including standardization across different legal systems, regulatory harmonization, and the development of sophisticated capital market instruments. The need for greater Shariah scholar consensus on contemporary financial issues and the development of international Islamic financial standards remain important priorities.</p>
+                        
+                        <p>However, these challenges also represent opportunities for innovation and development. The growing global interest in sustainable finance creates favorable conditions for the expansion of Islamic financial principles beyond Muslim-majority countries to global markets seeking ethical alternatives to conventional finance.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Global Integration and Future Prospects</h2>
+                        <p>The integration of Islamic finance with global financial systems requires careful attention to both maintaining Islamic principles and achieving interoperability with conventional financial infrastructure. The development of Islamic windows in conventional banks and the creation of hybrid financial products demonstrate evolving approaches to this integration.</p>
+                        
+                        <p>Future prospects for Islamic finance include greater integration with sustainable development goals, enhanced technological innovation, and expanded geographical reach. The potential for Islamic financial principles to contribute to more stable and equitable global financial systems continues to attract attention from policymakers and financial institutions worldwide.</p>
+                        
+                        <h2 class="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
+                        <p>Islamic banking and finance principles offer valuable resources for creating more sustainable, inclusive, and ethical financial systems. The emphasis on real economic activity, risk-sharing, social justice, and environmental stewardship aligns closely with contemporary efforts to reform global finance in response to economic, social, and environmental challenges.</p>
+                        
+                        <p>As the global community continues to seek alternatives to conventional financial models that have contributed to inequality and environmental degradation, Islamic financial principles provide both theoretical frameworks and practical tools for developing more responsible approaches to economic development. The challenge lies in scaling these approaches while maintaining their essential ethical foundations and adapting them to diverse global contexts.</p>
+                    </div>
+                `
+            }
+        ];
+
+        let currentArticles = articles;
+        let mobileMenuOpen = false;
+
+        // Utility Functions
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            const bgClass = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            
+            notification.className = `notification ${bgClass} text-white px-6 py-3 rounded-lg shadow-lg show`;
+            notification.querySelector('i').className = `fas ${iconClass} mr-2`;
+            notificationText.textContent = message;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('show');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenuOpen = !mobileMenuOpen;
+            
+            if (mobileMenuOpen) {
+                mobileMenu.classList.add('active');
+            } else {
+                mobileMenu.classList.remove('active');
+            }
+        }
+
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Search and Filter Functions
+        function performSearch(type = 'desktop') {
+            const searchTerm = type === 'mobile' ? 
+                document.getElementById('mobileSearchInput').value.toLowerCase() : 
+                document.getElementById('searchInput').value.toLowerCase();
+                
+            const resultsContainer = type === 'mobile' ?
+                document.getElementById('mobileSearchResults') :
+                document.getElementById('searchResults');
+                
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.classList.remove('active');
+                return;
+            }
+            
+            // Filter articles based on search term
+            const matchedArticles = articles.filter(article => 
+                article.title.toLowerCase().includes(searchTerm) ||
+                article.author.toLowerCase().includes(searchTerm) ||
+                article.category.toLowerCase().includes(searchTerm) ||
+                article.excerpt.toLowerCase().includes(searchTerm)
+            );
+            
+            // Display results
+            if (matchedArticles.length === 0) {
+                resultsContainer.innerHTML = `<div class="p-4 text-center text-gray-500">No results found</div>`;
+            } else {
+                matchedArticles.forEach(article => {
+                    // Highlight the matching term
+                    let titleWithHighlight = article.title;
+                    let authorWithHighlight = article.author;
+                    
+                    if (article.title.toLowerCase().includes(searchTerm)) {
+                        const regex = new RegExp(searchTerm, 'gi');
+                        titleWithHighlight = article.title.replace(regex, match => `<span class="search-highlight">${match}</span>`);
+                    }
+                    
+                    if (article.author.toLowerCase().includes(searchTerm)) {
+                        const regex = new RegExp(searchTerm, 'gi');
+                        authorWithHighlight = article.author.replace(regex, match => `<span class="search-highlight">${match}</span>`);
+                    }
+                    
+                    const resultItem = `
+                        <div class="search-result-item" onclick="openArticle(${article.id}); closeSearchResults('${type}')">
+                            <div class="font-medium">${titleWithHighlight}</div>
+                            <div class="flex justify-between mt-1">
+                                <span class="text-sm text-gray-500">By ${authorWithHighlight}</span>
+                                <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">${article.category}</span>
+                            </div>
+                        </div>
+                    `;
+                    resultsContainer.innerHTML += resultItem;
+                });
+            }
+            
+            resultsContainer.classList.add('active');
+        }
+        
+        function closeSearchResults(type = 'desktop') {
+            const resultsContainer = type === 'mobile' ?
+                document.getElementById('mobileSearchResults') :
+                document.getElementById('searchResults');
+                
+            resultsContainer.classList.remove('active');
+        }
+        
+        // Advanced search functionality
+        function performAdvancedSearch() {
+            const searchTerm = document.getElementById('advancedSearchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+            
+            // Filter articles based on search criteria
+            let filteredArticles = articles.filter(article => {
+                // If there's a search term, filter by it
+                if (searchTerm) {
+                    if (!(
+                        article.title.toLowerCase().includes(searchTerm) ||
+                        article.excerpt.toLowerCase().includes(searchTerm) ||
+                        article.author.toLowerCase().includes(searchTerm) ||
+                        article.category.toLowerCase().includes(searchTerm)
+                    )) {
+                        return false;
+                    }
+                }
+                
+                // If there's a category filter, filter by it
+                if (categoryFilter && article.category !== categoryFilter) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Sort articles
+            if (sortFilter === 'title') {
+                filteredArticles.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortFilter === 'author') {
+                filteredArticles.sort((a, b) => a.author.localeCompare(b.author));
+            } else {
+                filteredArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+            
+            // Update the search metrics
+            const searchMetrics = document.getElementById('searchMetrics');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            if (searchTerm || categoryFilter) {
+                searchMetrics.classList.remove('hidden');
+                resultsCount.textContent = filteredArticles.length;
+            } else {
+                searchMetrics.classList.add('hidden');
+            }
+            
+            // Display the filtered articles
+            currentArticles = filteredArticles;
+            displayArticles(currentArticles);
+        }
+
+        // Handle category pill clicks
+        function initCategoryPills() {
+            document.querySelectorAll('.category-pill').forEach(pill => {
+                pill.addEventListener('click', function() {
+                    // Remove active class from all pills
+                    document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked pill
+                    this.classList.add('active');
+                    
+                    // Update the category filter and perform search
+                    const category = this.getAttribute('data-category');
+                    document.getElementById('categoryFilter').value = category;
+                    performAdvancedSearch();
+                });
+            });
+        }
+
+        function displayArticles(articlesToShow = articles) {
+            const grid = document.getElementById('articlesGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (articlesToShow.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            noResults.classList.add('hidden');
+            grid.innerHTML = '';
+            
+            articlesToShow.forEach(article => {
+                const articleCard = `
+                    <div class="article-card rounded-xl shadow-lg overflow-hidden">
+                        <div class="relative">
+                            <img src="${article.image}" alt="${article.title}" class="w-full h-48 object-cover">
+                            <div class="absolute top-4 left-4 bg-yellow-400 text-gray-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                ${article.category}
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="title-font text-xl font-bold text-gray-800 mb-3 cursor-pointer hover:text-blue-600 transition-colors" onclick="openArticle(${article.id})">
+                                ${article.title}
+                            </h3>
+                            <p class="text-gray-600 mb-4">${article.excerpt}</p>
+                            
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <img src="${article.authorImage}" alt="${article.author}" class="author-avatar mr-3">
+                                    <div>
+                                        <p class="font-semibold text-sm text-gray-800">${article.author}</p>
+                                        <p class="text-xs text-gray-500">${article.date}</p>
+                                    </div>
+                                </div>
+                                <span class="text-sm text-gray-500">${article.readTime}</span>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button onclick="openArticle(${article.id})" class="flex-1 btn-primary py-2 rounded-lg font-semibold text-gray-800 hover:text-gray-900">
+                                    <i class="fas fa-book-open mr-2"></i>
+                                    Read More
+                                </button>
+                                <button onclick="shareArticle(${article.id})" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <button onclick="downloadArticle(${article.id})" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += articleCard;
+            });
+        }
+
+        // Article Functions
+        function openArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (article) {
+                document.getElementById('fullArticleContent').innerHTML = article.content;
+                openModal('articleModal');
+            }
+        }
+
+        function shareArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (article && navigator.share) {
+                navigator.share({
+                    title: article.title,
+                    text: article.excerpt,
+                    url: window.location.href
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                // Fallback: copy to clipboard
+                const url = `${window.location.href}#article-${articleId}`;
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('Article link copied to clipboard!');
+                }).catch(() => {
+                    showNotification('Unable to copy link', 'error');
+                });
+            }
+        }
+
+        function downloadArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (article) {
+                // Create a simple PDF-like content
+                const content = `
+                    <html>
+                    <head>
+                        <title>${article.title}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; margin: 2cm; }
+                            h1 { color: #1a365d; border-bottom: 2px solid #d4af37; }
+                            .author { color: #666; margin-bottom: 2em; }
+                            .content { text-align: justify; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${article.title}</h1>
+                        <div class="author">By ${article.author} - ${article.date}</div>
+                        <div class="content">${article.content}</div>
+                    </body>
+                    </html>
+                `;
+                
+                const blob = new Blob([content], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${article.title.replace(/[^a-zA-Z0-9]/g, '_')}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification('Article downloaded successfully!');
+            }
+        }
+
+        function bookmarkArticle() {
+            showNotification('Article bookmarked!');
+        }
+
+        // Form Handlers
+        function handleLogin(event) {
+            event.preventDefault();
+            showNotification('Login successful!');
+            closeModal('loginModal');
+        }
+
+        function handleSubscription(event) {
+            event.preventDefault();
+            showNotification('Subscription successful! Welcome to Islamic Insight Journal.');
+            closeModal('subscribeModal');
+        }
+
+        function handleContactForm(event) {
+            event.preventDefault();
+            showNotification('Message sent successfully! We will respond shortly.');
+        }
+
+        function subscribeNewsletter() {
+            const email = document.getElementById('newsletterEmail').value;
+            if (email) {
+                showNotification('Newsletter subscription successful!');
+                document.getElementById('newsletterEmail').value = '';
+            } else {
+                showNotification('Please enter a valid email address', 'error');
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            displayArticles();
+            initCategoryPills();
+            
+            // Close search results when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.search-container')) {
+                    closeSearchResults();
+                }
+                if (!event.target.closest('.advanced-search')) {
+                    closeSearchResults('mobile');
+                }
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (mobileMenuOpen && !event.target.closest('#mobileMenu') && !event.target.closest('button[onclick="toggleMobileMenu()"]')) {
+                    toggleMobileMenu();
+                }
+            });
+            
+            // Close modals when clicking outside
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            
+            // Add fade-in animation
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            });
+            
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
