@@ -267,27 +267,19 @@
     </style>
 </head>
 <body>
-    <!-- Notification System -->
-    <div id="notification" class="notification bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
-        <div class="flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
-            <span id="notificationText">Action completed successfully!</span>
-            <button onclick="hideNotification()" class="ml-4 text-white hover:text-gray-200">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-
     <!-- Navigation Bar -->
     <nav class="bg-gray-900 bg-opacity-95 backdrop-filter backdrop-blur-lg shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 lg:px-6">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center space-x-4">
                     <div class="text-xl lg:text-2xl font-bold text-white title-font">
-                        <i class="fas fa-book-open"></i>
-                        Quaf publications
+                        <i class="fas fa-mosque text-yellow-400 mr-2"></i>
+                        Islamic Insight
                     </div>
                 </div>
+                
+                
+                
                 
                 
                 <div class="hidden md:flex items-center space-x-4">
@@ -320,14 +312,16 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-8">
                     <div class="text-xl font-bold text-white title-font">
-                        <i class="fas fa-book-open"></i>
-                       Quaf publications
+                        <i class="fas fa-mosque text-yellow-400 mr-2"></i>
+                        Islamic Insight
                     </div>
                     <button onclick="toggleMobileMenu()" class="text-white">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
+                <nav class="space-y-4">
                 
+                    
                     <div class="pt-4 border-t border-gray-700">
                         <div class="advanced-search relative">
                             <input type="text" id="mobileSearchInput" placeholder="Search articles..." 
