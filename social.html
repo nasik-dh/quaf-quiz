@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quaf Premium Social Media Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --shadow-color: rgba(0, 0, 0, 0.25);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .quaf-floating-menu {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+        
+        .quaf-main-button {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            box-shadow: 
+                5px 5px 10px var(--shadow-color),
+                -5px -5px 10px rgba(255, 255, 255, 0.8),
+                inset 0 0 0 rgba(255, 255, 255, 0.4),
+                inset 0 0 0 var(--shadow-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quaf-main-button:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                7px 7px 15px var(--shadow-color),
+                -7px -7px 15px rgba(255, 255, 255, 0.8),
+                inset 0 0 0 rgba(255, 255, 255, 0.4),
+                inset 0 0 0 var(--shadow-color);
+        }
+        
+        .quaf-main-button:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .quaf-main-button:hover:before {
+            opacity: 1;
+        }
+        
+        .quaf-main-button img {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.5s ease;
+            filter: drop-shadow(0 2px 3px var(--shadow-color));
+            z-index: 2;
+        }
+        
+        .quaf-main-button.active {
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            box-shadow: 
+                inset 5px 5px 10px var(--shadow-color),
+                inset -5px -5px 10px rgba(255, 255, 255, 0.8),
+                0 0 0 rgba(255, 255, 255, 0.4),
+                0 0 0 var(--shadow-color);
+        }
+        
+        .quaf-main-button.active img {
+            transform: rotate(45deg);
+        }
+        
+        .quaf-social-icons {
+            position: absolute;
+            bottom: 80px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            visibility: hidden;
+        }
+        
+        .quaf-social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            box-shadow: 
+                5px 5px 10px var(--shadow-color),
+                -3px -3px 8px rgba(255, 255, 255, 0.8);
+            position: relative;
+            transform: scale(0);
+            opacity: 0;
+        }
+        
+        .quaf-social-icon:hover {
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 
+                7px 7px 15px var(--shadow-color),
+                -5px -5px 12px rgba(255, 255, 255, 0.8);
+        }
+        
+        .quaf-social-icon:before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            width: calc(100% + 16px);
+            height: calc(100% + 16px);
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            border-radius: 50%;
+        }
+        
+        .quaf-social-icon:hover:before {
+            opacity: 1;
+        }
+        
+        .quaf-social-icon i {
+            font-size: 22px;
+            color: white;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+            z-index: 2;
+        }
+        
+        .quaf-social-icon:hover i {
+            transform: scale(1.2);
+        }
+        
+        .pulse-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            animation: pulse 2s infinite;
+            opacity: 0;
+            z-index: 0;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            70% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        .facebook { background: linear-gradient(135deg, #3b5998, #2553b9); }
+        .instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .threads { background: linear-gradient(135deg, #000000, #333333); }
+        .youtube { background: linear-gradient(135deg, #FF0000, #cc0000); }
+        .telegram { background: linear-gradient(135deg, #0088cc, #0060a9); }
+        
+        .tooltip {
+            position: absolute;
+            right: 65px;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(-10px);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        .tooltip:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -5px;
+            transform: translateY(-50%);
+            border-width: 5px 0 5px 5px;
+            border-style: solid;
+            border-color: transparent transparent transparent #333;
+        }
+        
+        .quaf-social-icon:hover .tooltip {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Logo reflection effect */
+        .logo-reflection {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-reflection:after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.15;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            transition: transform 0.6s;
+        }
+        
+        .quaf-main-button:hover .logo-reflection:after {
+            transform: rotate(30deg) translate(40%, 0%);
+        }
+    </style>
+</head>
+<body>
+    <div class="quaf-floating-menu">
+        <div class="quaf-social-icons">
+            <a href="https://www.facebook.com/people/Quafdhdc/61576548098341/" target="_blank" class="quaf-social-icon facebook" data-name="Facebook">
+                <div class="tooltip">Facebook</div>
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/quafdhdc/" target="_blank" class="quaf-social-icon instagram" data-name="Instagram">
+                <div class="tooltip">Instagram</div>
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://wa.me/message/76OKA3KAKHINC1" target="_blank" class="quaf-social-icon whatsapp" data-name="WhatsApp">
+                <div class="tooltip">WhatsApp</div>
+                <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="https://www.threads.com/@quafdhdc?invite=0" target="_blank" class="quaf-social-icon threads" data-name="Threads">
+                <div class="tooltip">Threads</div>
+                <i class="fab fa-at"></i>
+            </a>
+            <a href="https://www.youtube.com/@quaf-dhdc" target="_blank" class="quaf-social-icon youtube" data-name="YouTube">
+                <div class="tooltip">YouTube</div>
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://t.me/quafdhdc" target="_blank" class="quaf-social-icon telegram" data-name="Telegram">
+                <div class="tooltip">Telegram</div>
+                <i class="fab fa-telegram-plane"></i>
+            </a>
+        </div>
+        <div class="quaf-main-button" id="quafMainButton">
+            <div class="pulse-effect"></div>
+            <div class="logo-reflection">
+                <img src="https://quaf.netlify.app/logo.png" alt="Quaf">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainButton = document.getElementById('quafMainButton');
+            const socialIcons = document.querySelectorAll('.quaf-social-icon');
+            let isOpen = false;
+            
+            // Initialize GSAP
+            gsap.set(socialIcons, { opacity: 0, scale: 0, y: 20 });
+            
+            mainButton.addEventListener('click', function() {
+                isOpen = !isOpen;
+                
+                if (isOpen) {
+                    mainButton.classList.add('active');
+                    document.querySelector('.quaf-social-icons').style.visibility = 'visible';
+                    
+                    // Animate icons appearing with stagger effect
+                    gsap.to(socialIcons, {
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        stagger: 0.05,
+                        duration: 0.4,
+                        ease: "back.out(1.7)"
+                    });
+                } else {
+                    mainButton.classList.remove('active');
+                    
+                    // Animate icons disappearing
+                    gsap.to(socialIcons, {
+                        opacity: 0,
+                        scale: 0,
+                        y: 20,
+                        stagger: 0.03,
+                        duration: 0.3,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            document.querySelector('.quaf-social-icons').style.visibility = 'hidden';
+                        }
+                    });
+                }
+            });
+            
+            // Add hover effects for the main button
+            mainButton.addEventListener('mouseover', function() {
+                gsap.to(mainButton.querySelector('img'), {
+                    scale: 1.1,
+                    duration: 0.3,
+                    ease: "power1.out"
+                });
+            });
+            
+            mainButton.addEventListener('mouseout', function() {
+                if (!mainButton.classList.contains('active')) {
+                    gsap.to(mainButton.querySelector('img'), {
+                        scale: 1,
+                        duration: 0.3,
+                        ease: "power1.out"
+                    });
+                }
+            });
+            
+            // Initial pulse animation
+            const pulseAnimation = () => {
+                gsap.to('.pulse-effect', {
+                    scale: 1.5,
+                    opacity: 0,
+                    duration: 2,
+                    repeat: -1,
+                    ease: "power1.inOut"
+                });
+            };
+            
+            pulseAnimation();
+        });
+    </script>
+</body>
+</html>
