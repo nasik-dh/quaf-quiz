@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Professional Spin Wheel</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4338ca;
+            --secondary: #6d28d9;
+            --accent: #f59e0b;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6f7ff 0%, #e9ebfd 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            max-width: 80vw;
+            max-height: 80vw;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.26, 0.99);
+            box-shadow: 0 0 0 5px var(--dark), 0 0 10px rgba(0, 0, 0, 0.3), 0 0 50px rgba(0, 0, 0, 0.15);
+        }
+        .wheel-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            border: 5px solid var(--dark);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) inset;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .wheel-center::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+        .spinner {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+        .spin-button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            position: relative;
+            overflow: hidden;
+        }
+        .spin-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        .spin-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .spin-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
+        }
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 10px 25px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 90vw;
+            width: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 7px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        .student-image {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s ease;
+        }
+        .student-image:hover {
+            transform: scale(1.03);
+        }
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .student-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin: 15px 0 5px;
+        }
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.3) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            from { transform: rotate(30deg) translateX(-100%); }
+            to { transform: rotate(30deg) translateX(100%); }
+        }
+        .page-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .celebration-icon {
+            position: absolute;
+            font-size: 30px;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0;
+            color: var(--accent);
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .logo-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 14px;
+            padding: 5px 12px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+    <div class="celebration"></div>
+    
+    <h1 class="page-title">Student Selection Wheel</h1>
+    
+    <div class="wheel-container mb-8">
+        <div class="spinner"></div>
+        <div class="wheel" id="wheel"></div>
+        <div class="wheel-center"></div>
+    </div>
+    
+    <button class="spin-button mb-8" id="spinBtn">
+        <i class="fas fa-sync-alt mr-2"></i> SPIN
+    </button>
+    
+    <div class="result-card" id="resultCard">
+        <div class="logo-badge">
+            <i class="fas fa-graduation-cap"></i> Selected Student
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="mb-5 md:mb-0 md:mr-5 relative">
+                <div class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg z-10 text-sm font-bold">
+                    <i class="fas fa-award"></i>
+                </div>
+                <img id="studentImage" src="" alt="Student" class="student-image shimmer shadow-lg">
+            </div>
+            
+            <div>
+                <div class="badge mb-2" id="admissionBadge"></div>
+                <h2 class="student-name" id="studentName"></h2>
+                <div class="text-gray-600 mb-4 flex items-center">
+                    <i class="fas fa-user-graduate mr-2"></i>
+                    <span>Student</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="py-2 px-4 rounded-full bg-green-100 text-green-700 mr-2">
+                        <i class="fas fa-check-circle"></i> Selected
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Student data with admission numbers, names and image URLs
+        const studentData = [
+            { id: 986, name: "MUHAMMED YASEEN K", imageUrl: "https://quaf.netlify.app/pic/pic/986.jpg" },
+            { id: 987, name: "MUHAMMED LASIN KC", imageUrl: "https://quaf.netlify.app/pic/pic/987.jpg" },
+            { id: 988, name: "MOHAMMED HADI V", imageUrl: "https://quaf.netlify.app/pic/pic/988.jpg" },
+            { id: 989, name: "MUHAMMED HAYYAN VP", imageUrl: "https://quaf.netlify.app/pic/pic/989.jpg" },
+            { id: 990, name: "MOHAMMED AFRAH N", imageUrl: "https://quaf.netlify.app/pic/pic/990.jpg" },
+            { id: 991, name: "MUHAMMED ZIYAD C", imageUrl: "https://quaf.netlify.app/pic/pic/991.jpg" },
+            { id: 992, name: "MUHAMMED SHAHAL", imageUrl: "https://quaf.netlify.app/pic/pic/992.jpg" },
+            { id: 993, name: "AQIB MUHAMMED KT", imageUrl: "https://quaf.netlify.app/pic/pic/993.jpg" },
+            { id: 994, name: "FARSHAD MR", imageUrl: "https://quaf.netlify.app/pic/pic/994.jpg" },
+            { id: 995, name: "MUHAMMED RABEEH PP", imageUrl: "https://quaf.netlify.app/pic/pic/995.jpg" },
+            { id: 996, name: "MUHAMMED SHAFEEQUE T", imageUrl: "https://quaf.netlify.app/pic/pic/996.jpg" },
+            { id: 997, name: "MUHAMMED QASIM MP", imageUrl: "https://quaf.netlify.app/pic/pic/997.jpg" },
+            { id: 998, name: "MUHAMMED HASHIM V", imageUrl: "https://quaf.netlify.app/pic/pic/998.jpg" },
+            { id: 999, name: "MUHAMMED RASAL PP", imageUrl: "https://quaf.netlify.app/pic/pic/999.jpg" },
+            { id: 1000, name: "ALI RAFI EP", imageUrl: "https://quaf.netlify.app/pic/pic/1000.jpg" },
+            { id: 1001, name: "MUHAMMED SINAN CK", imageUrl: "https://quaf.netlify.app/pic/pic/1001.jpg" },
+            { id: 1002, name: "HAMDAN CC", imageUrl: "https://quaf.netlify.app/pic/pic/1002.jpg" },
+            { id: 1003, name: "MUHAMMED ALI M", imageUrl: "https://quaf.netlify.app/pic/pic/1003.jpg" },
+            { id: 1004, name: "MUHAMMED SHAFAN A", imageUrl: "https://quaf.netlify.app/pic/pic/1004.jpg" },
+            { id: 1005, name: "MUHAMMED ANSHAD VP", imageUrl: "https://quaf.netlify.app/pic/pic/1005.jpg" },
+            { id: 1006, name: "MUHAMMED NASWIH IK", imageUrl: "https://quaf.netlify.app/pic/pic/1006.jpg" },
+            { id: 1008, name: "HISHAM RAHMATHULLAH O", imageUrl: "https://quaf.netlify.app/pic/pic/1008.jpg" },
+            { id: 1009, name: "SAHL SHAN O", imageUrl: "https://quaf.netlify.app/pic/pic/1009.jpg" },
+            { id: 1010, name: "SADHAQATHULLA C", imageUrl: "https://quaf.netlify.app/pic/pic/1010.jpg" },
+            { id: 1011, name: "MUHAMMED SAHL", imageUrl: "https://quaf.netlify.app/pic/pic/1011.jpg" },
+            { id: 1012, name: "MUHAMMED HASHIM KH", imageUrl: "https://quaf.netlify.app/pic/pic/1012.jpg" },
+            { id: 1013, name: "SAIDALAVI SHAMIL MC", imageUrl: "https://quaf.netlify.app/pic/pic/1013.jpg" },
+            { id: 1014, name: "MISHAB PT", imageUrl: "https://quaf.netlify.app/pic/pic/1014.jpg" },
+            { id: 1015, name: "MUHAMMED RASIN KP", imageUrl: "https://quaf.netlify.app/pic/pic/1015.jpg" },
+            { id: 1016, name: "MUHAMMED ASLAM", imageUrl: "https://quaf.netlify.app/pic/pic/1016.jpg" },
+            { id: 1017, name: "MUHAMMED MUSTHAFA SM", imageUrl: "https://quaf.netlify.app/pic/pic/1017.jpg" },
+            { id: 1018, name: "MUHAMMED SHAFIN", imageUrl: "https://quaf.netlify.app/pic/pic/1018.jpg" },
+            { id: 1019, name: "MUHAMMED RAMEES VP", imageUrl: "https://quaf.netlify.app/pic/pic/1019.jpg" },
+            { id: 1020, name: "ABDAUL HADI", imageUrl: "https://quaf.netlify.app/pic/pic/1020.jpg" },
+            { id: 1021, name: "AMAN ASKAR CT", imageUrl: "https://quaf.netlify.app/pic/pic/1021.jpg" },
+            { id: 960, name: "MUHAMMED FAHEEM NP", imageUrl: "https://quaf.netlify.app/pic/pic/960.png" }
+        ];
+        
+        // Get DOM elements
+        const wheel = document.getElementById('wheel');
+        const spinBtn = document.getElementById('spinBtn');
+        const resultCard = document.getElementById('resultCard');
+        const studentImage = document.getElementById('studentImage');
+        const studentName = document.getElementById('studentName');
+        const admissionBadge = document.getElementById('admissionBadge');
+        const celebrationContainer = document.querySelector('.celebration');
+        
+        // Generate wheel segments
+        const numSegments = studentData.length;
+        const anglePerSegment = 360 / numSegments;
+        const canvasSize = 400;
+        
+        // Create a canvas element to draw the wheel
+        const canvas = document.createElement('canvas');
+        canvas.width = canvasSize;
+        canvas.height = canvasSize;
+        wheel.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        const center = canvasSize / 2;
+        const radius = center - 10;
+        
+        // Colors for wheel segments
+        const colors = [
+            '#4338ca', '#6d28d9', '#7c3aed', '#8b5cf6', '#9333ea', 
+            '#a855f7', '#c026d3', '#d946ef', '#db2777', '#e11d48', 
+            '#f43f5e', '#f59e0b', '#f97316', '#d97706', '#ca8a04'
+        ];
+        
+        // Draw the wheel
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvasSize, canvasSize);
+            
+            for (let i = 0; i < numSegments; i++) {
+                const startAngle = i * anglePerSegment * Math.PI / 180;
+                const endAngle = (i + 1) * anglePerSegment * Math.PI / 180;
+                
+                // Draw segment
+                ctx.beginPath();
+                ctx.moveTo(center, center);
+                ctx.arc(center, center, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Draw admission number text
+                ctx.save();
+                ctx.translate(center, center);
+                const angle = startAngle + (anglePerSegment / 2) * Math.PI / 180;
+                ctx.rotate(angle);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 16px Montserrat';
+                ctx.fillText(studentData[i].id.toString(), radius - 20, 5);
+                ctx.restore();
+            }
+        }
+        
+        drawWheel();
+        
+        // Variables for spinning
+        let spinning = false;
+        let selectedIndex = -1;
+        
+        // Spin the wheel
+        function spinWheel() {
+            if (spinning) return;
+            
+            spinning = true;
+            spinBtn.disabled = true;
+            spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Spinning...';
+            resultCard.classList.remove('show');
+            
+            // Random number of full rotations (5-10) + random segment
+            const extraRotations = Math.floor(Math.random() * 5) + 5;
+            selectedIndex = Math.floor(Math.random() * numSegments);
+            const totalAngle = -(extraRotations * 360 + selectedIndex * anglePerSegment);
+            
+            // Apply rotation animation
+            wheel.style.transform = `rotate(${totalAngle}deg)`;
+            
+            // After spinning completes
+            setTimeout(() => {
+                showResult();
+                spinning = false;
+                spinBtn.disabled = false;
+                spinBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i> SPIN';
+            }, 5000);
+        }
+        
+        // Show the result with celebration effects
+        function showResult() {
+            const selectedStudent = studentData[selectedIndex];
+            
+            // Update result card
+            studentImage.src = selectedStudent.imageUrl;
+            studentName.textContent = selectedStudent.name;
+            admissionBadge.textContent = `Admission No: ${selectedStudent.id}`;
+            
+            // Show the result card with animation
+            setTimeout(() => {
+                resultCard.classList.add('show');
+                
+                // Create confetti celebration
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                
+                // Add floating celebration icons
+                createCelebrationIcons();
+                
+                // Add extra confetti burst after a delay
+                setTimeout(() => {
+                    const end = Date.now() + 2000;
+                    
+                    const colors = ['#4338ca', '#6d28d9', '#f59e0b', '#ef4444'];
+                    
+                    (function frame() {
+                        confetti({
+                            particleCount: 2,
+                            angle: 60,
+                            spread: 55,
+                            origin: { x: 0 },
+                            colors: colors
+                        });
+                        
+                        confetti({
+                            particleCount: 2,
+                            angle: 120,
+                            spread: 55,
+                            origin: { x: 1 },
+                            colors: colors
+                        });
+                        
+                        if (Date.now() < end) {
+                            requestAnimationFrame(frame);
+                        }
+                    }());
+                }, 1000);
+            }, 500);
+        }
+        
+        // Create floating celebration icons
+        function createCelebrationIcons() {
+            celebrationContainer.innerHTML = '';
+            const icons = ['🎉', '🎊', '🥳', '🏆', '⭐', '🌟', '👏', '✨'];
+            
+            for (let i = 0; i < 20; i++) {
+                const icon = document.createElement('div');
+                icon.classList.add('celebration-icon');
+                icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+                
+                // Random position, delay and duration
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 2 + 3;
+                const xPos = Math.random() * 100;
+                
+                icon.style.left = `${xPos}%`;
+                icon.style.bottom = '-30px';
+                icon.style.animation = `float ${duration}s ease-in-out ${delay}s forwards`;
+                icon.style.fontSize = `${Math.random() * 20 + 20}px`;
+                
+                celebrationContainer.appendChild(icon);
+            }
+        }
+        
+        // Event listener for spin button
+        spinBtn.addEventListener('click', spinWheel);
+        
+        // Preload student images for smoother experience
+        studentData.forEach(student => {
+            const img = new Image();
+            img.src = student.imageUrl;
+        });
+    </script>
+</body>
+</html>
