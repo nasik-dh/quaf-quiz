@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Spin Wheel Selector</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1c2c, #2a3042);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .spin-btn {
+            background: linear-gradient(135deg, #ff6b6b, #d62976);
+            border: none;
+            box-shadow: 0 4px 15px rgba(214, 41, 118, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .spin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(214, 41, 118, 0.6);
+        }
+        
+        .spin-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #4d7bf3, #5a67d8);
+            border: none;
+            box-shadow: 0 4px 15px rgba(90, 103, 216, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(90, 103, 216, 0.6);
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+        
+        .wheel-pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50% 50% 0 0;
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        #wheel {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        
+        .student-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0);
+            opacity: 0;
+        }
+        
+        .card-img {
+            border-radius: 8px;
+            object-fit: cover;
+            width: 100%;
+            height: 200px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .history-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        @media (max-width: 640px) {
+            .wheel-container {
+                max-width: 280px;
+            }
+        }
+        
+        .glow {
+            box-shadow: 0 0 10px #ff6b6b, 
+                        0 0 20px rgba(214, 41, 118, 0.6), 
+                        0 0 30px rgba(214, 41, 118, 0.4);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px #ff6b6b, 
+                            0 0 20px rgba(214, 41, 118, 0.6), 
+                            0 0 30px rgba(214, 41, 118, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 15px #ff6b6b, 
+                            0 0 25px rgba(214, 41, 118, 0.7), 
+                            0 0 40px rgba(214, 41, 118, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 10px #ff6b6b, 
+                            0 0 20px rgba(214, 41, 118, 0.6), 
+                            0 0 30px rgba(214, 41, 118, 0.4);
+            }
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="container mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-6">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500">
+                Advanced Spin Wheel Selector
+            </span>
+        </h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Left column - wheel -->
+            <div class="flex flex-col items-center justify-center">
+                <div class="wheel-container mb-6">
+                    <div class="wheel-pointer"></div>
+                    <canvas id="wheel" width="380" height="380"></canvas>
+                </div>
+                
+                <div class="flex gap-4 mt-4">
+                    <button id="spinBtn" class="spin-btn text-white font-bold py-3 px-8 rounded-full text-lg">
+                        <i class="fas fa-sync-alt mr-2"></i> SPIN
+                    </button>
+                    <button id="resetBtn" class="reset-btn text-white font-bold py-3 px-8 rounded-full text-lg">
+                        <i class="fas fa-redo-alt mr-2"></i> RESET
+                    </button>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <p id="remaining" class="text-lg text-gray-300 font-medium">
+                        All students available for selection
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Right column - results -->
+            <div class="flex flex-col gap-6">
+                <!-- Selected student card -->
+                <div id="selectedStudent" class="student-card">
+                    <h2 class="text-2xl font-bold text-center mb-4">Selected Student</h2>
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-full mb-4">
+                            <img id="studentImage" src="" alt="Student" class="card-img">
+                            <div id="cardBadge" class="absolute top-2 right-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                                #<span id="studentAdNo"></span>
+                            </div>
+                        </div>
+                        <h3 id="studentName" class="text-xl font-bold text-center text-white"></h3>
+                    </div>
+                </div>
+                
+                <!-- History section -->
+                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-4">
+                    <h2 class="text-xl font-bold mb-4">
+                        <i class="fas fa-history mr-2"></i> Selection History
+                    </h2>
+                    <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto">
+                        <!-- History items will be added here -->
+                        <p id="noHistoryMsg" class="text-gray-400 text-center py-4">No selections yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Student data
+        const students = [
+            { name: "MUHAMMED YASEEN K", adNo: 986 },
+            { name: "MUHAMMED LASIN KC", adNo: 987 },
+            { name: "MOHAMMED HADI V", adNo: 988 },
+            { name: "MUHAMMED HAYYAN VP", adNo: 989 },
+            { name: "MOHAMMED AFRAH N", adNo: 990 },
+            { name: "MUHAMMED ZIYAD C", adNo: 991 },
+            { name: "MUHAMMED SHAHAL", adNo: 992 },
+            { name: "AQIB MUHAMMED KT", adNo: 993 },
+            { name: "FARSHAD MR", adNo: 994 },
+            { name: "MUHAMMED RABEEH PP", adNo: 995 },
+            { name: "MUHAMMED SHAFEEQUE T", adNo: 996 },
+            { name: "MUHAMMED QASIM MP", adNo: 997 },
+            { name: "MUHAMMED HASHIM V", adNo: 998 },
+            { name: "MUHAMMED RASAL PP", adNo: 999 },
+            { name: "ALI RAFI EP", adNo: 1000 },
+            { name: "MUHAMMED SINAN CK", adNo: 1001 },
+            { name: "HAMDAN CC", adNo: 1002 },
+            { name: "MUHAMMED ALI M", adNo: 1003 },
+            { name: "MUHAMMED SHAFAN A", adNo: 1004 },
+            { name: "MUHAMMED ANSHAD VP", adNo: 1005 },
+            { name: "MUHAMMED NASWIH IK", adNo: 1006 },
+            { name: "HISHAM RAHMATHULLAH O", adNo: 1008 },
+            { name: "SAHL SHAN O", adNo: 1009 },
+            { name: "SADHAQATHULLA C", adNo: 1010 },
+            { name: "MUHAMMED SAHL", adNo: 1011 },
+            { name: "MUHAMMED HASHIM KH", adNo: 1012 },
+            { name: "SAIDALAVI SHAMIL MC", adNo: 1013 },
+            { name: "MISHAB PT", adNo: 1014 },
+            { name: "MUHAMMED RASIN KP", adNo: 1015 },
+            { name: "MUHAMMED ASLAM", adNo: 1016 },
+            { name: "MUHAMMED MUSTHAFA SM", adNo: 1017 },
+            { name: "MUHAMMED SHAFIN", adNo: 1018 },
+            { name: "MUHAMMED RAMEES VP", adNo: 1019 },
+            { name: "ABDAUL HADI", adNo: 1020 },
+            { name: "AMAN ASKAR CT", adNo: 1021 },
+            { name: "MUHAMMED FAHEEM NP", adNo: 960 }
+        ];
+        
+        // Global variables
+        let availableStudents = [...students];
+        let selectedStudents = [];
+        let isSpinning = false;
+        let spinAngle = 0;
+        
+        // Canvas setup
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const wheel = {
+            radius: canvas.width / 2,
+            centerX: canvas.width / 2,
+            centerY: canvas.height / 2
+        };
+        
+        // Initialize wheel
+        function drawWheel() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (availableStudents.length === 0) {
+                // Draw empty wheel
+                ctx.beginPath();
+                ctx.arc(wheel.centerX, wheel.centerY, wheel.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#333';
+                ctx.fill();
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#fff';
+                ctx.font = '20px Poppins';
+                ctx.fillText('No students left', wheel.centerX, wheel.centerY);
+                return;
+            }
+            
+            const sliceAngle = 2 * Math.PI / availableStudents.length;
+            
+            // Draw slices
+            for (let i = 0; i < availableStudents.length; i++) {
+                const startAngle = spinAngle + i * sliceAngle;
+                const endAngle = startAngle + sliceAngle;
+                
+                // Alternate colors
+                const colorIndex = i % 5;
+                const colors = [
+                    '#ff6b6b', '#5a67d8', '#38b2ac', '#d69e2e', '#805ad5'
+                ];
+                
+                // Draw slice
+                ctx.beginPath();
+                ctx.moveTo(wheel.centerX, wheel.centerY);
+                ctx.arc(wheel.centerX, wheel.centerY, wheel.radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[colorIndex];
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Draw text
+                ctx.save();
+                ctx.translate(wheel.centerX, wheel.centerY);
+                ctx.rotate(startAngle + sliceAngle / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 16px Poppins';
+                const textRadius = wheel.radius * 0.75;
+                ctx.fillText(availableStudents[i].adNo, textRadius, 5);
+                ctx.restore();
+            }
+            
+            // Draw center circle
+            ctx.beginPath();
+            ctx.arc(wheel.centerX, wheel.centerY, wheel.radius * 0.15, 0, Math.PI * 2);
+            ctx.fillStyle = '#1a1c2c';
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+        
+        // Spin the wheel
+        function spinWheel() {
+            if (isSpinning || availableStudents.length === 0) return;
+            
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            
+            // Hide the previous selection
+            gsap.to('#selectedStudent', { scale: 0, opacity: 0, duration: 0.3 });
+            
+            // Calculate random spin
+            const spins = 5 + Math.random() * 5; // 5-10 full rotations
+            const randomIndex = Math.floor(Math.random() * availableStudents.length);
+            const sliceAngle = 2 * Math.PI / availableStudents.length;
+            const targetAngle = spinAngle - (2 * Math.PI * spins) - (randomIndex * sliceAngle) - (sliceAngle / 2);
+            
+            // Animate the wheel
+            gsap.to({ angle: spinAngle }, {
+                angle: targetAngle,
+                duration: 5,
+                ease: "power2.inOut",
+                onUpdate: function() {
+                    spinAngle = this.targets()[0].angle;
+                    drawWheel();
+                },
+                onComplete: function() {
+                    spinAngle = targetAngle % (2 * Math.PI);
+                    if (spinAngle > 0) spinAngle -= 2 * Math.PI;
+                    
+                    // Get selected student
+                    const selectedStudent = availableStudents[randomIndex];
+                    
+                    // Remove from available and add to selected
+                    availableStudents = availableStudents.filter(student => student.adNo !== selectedStudent.adNo);
+                    selectedStudents.push(selectedStudent);
+                    
+                    // Show selected student
+                    showSelectedStudent(selectedStudent);
+                    
+                    // Update history
+                    updateHistory(selectedStudent);
+                    
+                    // Update remaining count
+                    updateRemainingCount();
+                    
+                    // Re-enable spin button
+                    setTimeout(() => {
+                        isSpinning = false;
+                        document.getElementById('spinBtn').disabled = availableStudents.length === 0;
+                    }, 1000);
+                }
+            });
+        }
+        
+        // Show selected student
+        function showSelectedStudent(student) {
+            const studentImage = document.getElementById('studentImage');
+            const studentName = document.getElementById('studentName');
+            const studentAdNo = document.getElementById('studentAdNo');
+            
+            // Set data
+            studentImage.src = `https://quaf.netlify.app/pic/pic/${student.adNo}.jpg`;
+            studentImage.onerror = function() {
+                this.src = "https://quaf.netlify.app/pic/pic/960.png"; // Default image
+            };
+            studentName.textContent = student.name;
+            studentAdNo.textContent = student.adNo;
+            
+            // Show with animation
+            setTimeout(() => {
+                gsap.to('#selectedStudent', { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" });
+                
+                // Trigger confetti
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                
+                // Add glow effect to the card
+                const card = document.getElementById('selectedStudent');
+                card.classList.add('glow');
+                
+                // Remove glow after animation
+                setTimeout(() => {
+                    card.classList.remove('glow');
+                }, 3000);
+            }, 200);
+        }
+        
+        // Update history section
+        function updateHistory(student) {
+            const historyList = document.getElementById('historyList');
+            const noHistoryMsg = document.getElementById('noHistoryMsg');
+            
+            // Hide no-history message if this is the first selection
+            if (selectedStudents.length === 1) {
+                noHistoryMsg.style.display = 'none';
+            }
+            
+            // Create history item
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item p-3 flex items-center justify-between';
+            historyItem.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <img src="https://quaf.netlify.app/pic/pic/${student.adNo}.jpg" alt="${student.name}" class="history-img">
+                    <div>
+                        <p class="font-medium">${student.name}</p>
+                        <p class="text-xs text-gray-400">#${student.adNo}</p>
+                    </div>
+                </div>
+                <span class="text-xs bg-gray-800 px-2 py-1 rounded-full">#${selectedStudents.length}</span>
+            `;
+            
+            // Add onerror handler for the image
+            const img = historyItem.querySelector('img');
+            img.onerror = function() {
+                this.src = "https://quaf.netlify.app/pic/pic/960.png"; // Default image
+            };
+            
+            // Add to list with animation
+            historyItem.style.opacity = '0';
+            historyItem.style.transform = 'translateY(20px)';
+            historyList.prepend(historyItem);
+            
+            // Animate entry
+            setTimeout(() => {
+                gsap.to(historyItem, { opacity: 1, y: 0, duration: 0.4 });
+            }, 300);
+        }
+        
+        // Update remaining count
+        function updateRemainingCount() {
+            const remaining = document.getElementById('remaining');
+            if (availableStudents.length === 0) {
+                remaining.textContent = 'All students have been selected';
+                remaining.className = 'text-lg text-yellow-300 font-medium';
+            } else {
+                remaining.textContent = `${availableStudents.length} students remaining`;
+                remaining.className = 'text-lg text-gray-300 font-medium';
+            }
+        }
+        
+        // Reset function
+        function resetWheel() {
+            // Reset data
+            availableStudents = [...students];
+            selectedStudents = [];
+            
+            // Reset UI
+            document.getElementById('spinBtn').disabled = false;
+            document.getElementById('historyList').innerHTML = '<p id="noHistoryMsg" class="text-gray-400 text-center py-4">No selections yet</p>';
+            gsap.to('#selectedStudent', { scale: 0, opacity: 0, duration: 0.3 });
+            updateRemainingCount();
+            
+            // Reset wheel
+            drawWheel();
+            
+            // Add reset animation
+            gsap.fromTo('#wheel', 
+                { rotation: 0 }, 
+                { rotation: 360, duration: 1, ease: "back.out(1.4)" }
+            );
+        }
+        
+        // Event listeners
+        document.getElementById('spinBtn').addEventListener('click', spinWheel);
+        document.getElementById('resetBtn').addEventListener('click', resetWheel);
+        
+        // Initial draw
+        drawWheel();
+        
+        // Responsive resizing
+        function handleResize() {
+            const container = document.querySelector('.wheel-container');
+            const containerWidth = container.clientWidth;
+            
+            if (containerWidth < 380) {
+                canvas.width = containerWidth;
+                canvas.height = containerWidth;
+                wheel.radius = containerWidth / 2;
+                wheel.centerX = containerWidth / 2;
+                wheel.centerY = containerWidth / 2;
+                drawWheel();
+            }
+        }
+        
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial check
+    </script>
+</body>
+</html>
