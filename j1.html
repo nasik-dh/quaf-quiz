@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal of Advanced Research - Academic Publications</title>
+    <meta name="description" content="Journal of Advanced Research publishes peer-reviewed articles across multiple disciplines including science, technology, medicine, and humanities.">
+    <meta name="keywords" content="academic journal, research papers, peer review, scientific publications, scholarly articles">
+    <meta name="author" content="Journal of Advanced Research">
+    <meta property="og:title" content="Journal of Advanced Research - Academic Publications">
+    <meta property="og:description" content="Leading academic journal publishing cutting-edge research across multiple disciplines">
+    <meta property="og:type" content="website">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 50%, #581c87 100%);
+        }
+        .article-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #3b82f6;
+        }
+        .modal {
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal-content {
+            animation: slideIn 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .badge-blue { background-color: #dbeafe; color: #1d4ed8; }
+        .badge-green { background-color: #d1fae5; color: #065f46; }
+        .badge-purple { background-color: #e9d5ff; color: #7c3aed; }
+        .badge-red { background-color: #fee2e2; color: #dc2626; }
+        .badge-yellow { background-color: #fef3c7; color: #d97706; }
+        .navbar {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        .search-highlight {
+            background-color: #fef3c7;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+        .article-content {
+            line-height: 1.8;
+        }
+        .article-content h2 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .article-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        .article-content ul, .article-content ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+        .citation {
+            background-color: #f3f4f6;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+        }
+        @media print {
+            body { font-size: 12pt; }
+            .no-print { display: none !important; }
+            .article-card { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-graduation-cap text-2xl text-blue-600 mr-3"></i>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">Journal of Advanced Research</h1>
+                        <p class="text-xs text-gray-600">Scholarly Publications & Peer Review</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition-colors">About</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition-colors">Contact</a>
+                    <div class="relative">
+                        <input type="text" id="search-input" placeholder="Search articles..." 
+                               class="w-64 px-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                        <button id="search-btn" class="absolute right-2 top-2 text-gray-500 hover:text-blue-600">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-blue-600">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-blue-600 font-medium">About</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+                    <div class="relative">
+                        <input type="text" id="mobile-search-input" placeholder="Search articles..." 
+                               class="w-full px-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                        <button id="mobile-search-btn" class="absolute right-2 top-2 text-gray-500 hover:text-blue-600">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient text-white pt-32 pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Advancing Knowledge Through Research</h1>
+            <p class="text-xl md:text-2xl mb-8 text-blue-100">A premier platform for peer-reviewed academic publications across diverse disciplines</p>
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <input type="text" id="hero-search" placeholder="Search by title, author, or keyword..." 
+                           class="w-full px-6 py-4 rounded-full text-gray-900 text-lg focus:ring-4 focus:ring-blue-300 outline-none">
+                    <button id="hero-search-btn" class="absolute right-4 top-4 text-gray-500 hover:text-blue-600">
+                        <i class="fas fa-search text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mt-8 flex flex-wrap justify-center gap-4 text-sm">
+                <div class="bg-white bg-opacity-20 rounded-full px-4 py-2">
+                    <i class="fas fa-check mr-2"></i>Peer Reviewed
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-full px-4 py-2">
+                    <i class="fas fa-globe mr-2"></i>Open Access
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-full px-4 py-2">
+                    <i class="fas fa-download mr-2"></i>Free Downloads
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Results Modal -->
+    <div id="search-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 modal">
+        <div class="flex items-start justify-center min-h-screen pt-20 px-4">
+            <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-4xl">
+                <div class="flex justify-between items-center p-6 border-b">
+                    <h2 class="text-2xl font-bold">Search Results</h2>
+                    <button id="close-search" class="text-gray-500 hover:text-gray-700 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="search-results" class="p-6 max-h-96 overflow-y-auto">
+                    <!-- Search results will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Articles Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Featured Articles</h2>
+                <p class="text-xl text-gray-600">Recent breakthroughs and innovative research from leading scholars</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Featured Article 1 -->
+                <article class="article-card bg-white rounded-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-brain text-6xl text-white opacity-75"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-3">
+                            <span class="badge badge-blue">Neuroscience</span>
+                            <span class="badge badge-purple">Cognitive Science</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 cursor-pointer hover:text-blue-600 transition-colors" onclick="openArticle(1)">
+                            Neural Networks and Consciousness: A Comprehensive Review of Current Understanding
+                        </h3>
+                        <p class="text-gray-600 mb-2">Dr. Sarah Johnson, Prof. Michael Chen</p>
+                        <p class="text-sm text-gray-500 mb-4">Published: March 15, 2024 • 25 pages</p>
+                        <p class="text-gray-700 mb-4">This comprehensive review examines the latest developments in our understanding of consciousness through the lens of neural network theory, providing insights into the mechanisms underlying conscious experience.</p>
+                        <div class="flex justify-between items-center">
+                            <button onclick="openArticle(1)" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                                Read Full Article <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                            <div class="text-gray-500 text-sm">
+                                <i class="fas fa-eye mr-1"></i>2,847
+                                <i class="fas fa-download ml-3 mr-1"></i>1,239
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Featured Article 2 -->
+                <article class="article-card bg-white rounded-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
+                        <i class="fas fa-leaf text-6xl text-white opacity-75"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-3">
+                            <span class="badge badge-green">Environmental Science</span>
+                            <span class="badge badge-blue">Climate Change</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 cursor-pointer hover:text-blue-600 transition-colors" onclick="openArticle(2)">
+                            Sustainable Carbon Capture Technologies: Innovations and Implementation Strategies
+                        </h3>
+                        <p class="text-gray-600 mb-2">Dr. Emily Rodriguez, Dr. James Park</p>
+                        <p class="text-sm text-gray-500 mb-4">Published: March 10, 2024 • 32 pages</p>
+                        <p class="text-gray-700 mb-4">An in-depth analysis of emerging carbon capture technologies and their potential for large-scale implementation in the fight against climate change.</p>
+                        <div class="flex justify-between items-center">
+                            <button onclick="openArticle(2)" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                                Read Full Article <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                            <div class="text-gray-500 text-sm">
+                                <i class="fas fa-eye mr-1"></i>3,156
+                                <i class="fas fa-download ml-3 mr-1"></i>1,847
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Featured Article 3 -->
+                <article class="article-card bg-white rounded-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
+                        <i class="fas fa-dna text-6xl text-white opacity-75"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-3">
+                            <span class="badge badge-red">Medicine</span>
+                            <span class="badge badge-purple">Genetics</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 cursor-pointer hover:text-blue-600 transition-colors" onclick="openArticle(3)">
+                            CRISPR Gene Editing: Therapeutic Applications and Ethical Considerations
+                        </h3>
+                        <p class="text-gray-600 mb-2">Prof. Lisa Zhang, Dr. Robert Kumar</p>
+                        <p class="text-sm text-gray-500 mb-4">Published: March 8, 2024 • 28 pages</p>
+                        <p class="text-gray-700 mb-4">Exploring the therapeutic potential of CRISPR technology while addressing the complex ethical landscape surrounding genetic modification.</p>
+                        <div class="flex justify-between items-center">
+                            <button onclick="openArticle(3)" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                                Read Full Article <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                            <div class="text-gray-500 text-sm">
+                                <i class="fas fa-eye mr-1"></i>4,293
+                                <i class="fas fa-download ml-3 mr-1"></i>2,156
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Publications Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Recent Publications</h2>
+                <p class="text-xl text-gray-600">Latest peer-reviewed articles across multiple disciplines</p>
+            </div>
+
+            <!-- Filter Categories -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="filter-btn active bg-blue-600 text-white px-6 py-2 rounded-full font-semibold transition-all hover:bg-blue-700" data-category="all">
+                    All Categories
+                </button>
+                <button class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full font-semibold transition-all hover:bg-gray-100 border" data-category="technology">
+                    Technology
+                </button>
+                <button class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full font-semibold transition-all hover:bg-gray-100 border" data-category="medicine">
+                    Medicine
+                </button>
+                <button class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full font-semibold transition-all hover:bg-gray-100 border" data-category="science">
+                    Science
+                </button>
+                <button class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-full font-semibold transition-all hover:bg-gray-100 border" data-category="humanities">
+                    Humanities
+                </button>
+            </div>
+
+            <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Articles will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Article Modal -->
+    <div id="article-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 modal">
+        <div class="flex items-start justify-center min-h-screen pt-10 px-4">
+            <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-5xl">
+                <div class="flex justify-between items-center p-6 border-b">
+                    <div class="flex-1">
+                        <h2 id="modal-title" class="text-2xl md:text-3xl font-bold mb-2"></h2>
+                        <p id="modal-authors" class="text-gray-600 mb-1"></p>
+                        <p id="modal-date" class="text-sm text-gray-500"></p>
+                    </div>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700 text-2xl ml-4">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="modal-categories" class="mb-6">
+                        <!-- Categories will be inserted here -->
+                    </div>
+                    <div id="modal-content" class="article-content prose prose-lg max-w-none">
+                        <!-- Article content will be inserted here -->
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <div class="flex flex-wrap gap-4 justify-between items-center">
+                            <div class="flex gap-4">
+                                <button onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                                    <i class="fas fa-download mr-2"></i>Download PDF
+                                </button>
+                                <button onclick="shareArticle()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                                    <i class="fas fa-share-alt mr-2"></i>Share
+                                </button>
+                                <button onclick="citeArticle()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                                    <i class="fas fa-quote-right mr-2"></i>Cite
+                                </button>
+                            </div>
+                            <div class="text-gray-500 text-sm">
+                                <span><i class="fas fa-eye mr-1"></i><span id="modal-views"></span> views</span>
+                                <span class="ml-4"><i class="fas fa-download mr-1"></i><span id="modal-downloads"></span> downloads</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8">About Journal of Advanced Research</h2>
+                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                    The Journal of Advanced Research is a premier international publication dedicated to disseminating 
+                    cutting-edge research across multiple disciplines. Our rigorous peer-review process ensures the 
+                    highest quality of scholarly work reaches the global academic community.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                    <div class="text-center">
+                        <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-award text-3xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Peer-Reviewed Excellence</h3>
+                        <p class="text-gray-600">Rigorous review process ensuring the highest standards of academic integrity and research quality.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-globe text-3xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Global Reach</h3>
+                        <p class="text-gray-600">Connecting researchers worldwide with open access to groundbreaking discoveries and innovations.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-users text-3xl text-purple-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Expert Community</h3>
+                        <p class="text-gray-600">A network of distinguished scholars and researchers contributing to advancing human knowledge.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-16 bg-gray-50 rounded-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6">Our Mission</h3>
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        To advance scientific knowledge and promote intellectual discourse by providing a platform for 
+                        researchers to share innovative findings, foster collaboration, and contribute to solving the 
+                        world's most pressing challenges through evidence-based research and scholarly excellence.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Contact Us</h2>
+                    <p class="text-xl text-gray-600">Get in touch with our editorial team</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Editorial Office</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-blue-600 mt-1 mr-4"></i>
+                                <div>
+                                    <p class="font-semibold">Address</p>
+                                    <p class="text-gray-600">123 Academic Way<br>Research City, RC 12345<br>United States</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-blue-600 mt-1 mr-4"></i>
+                                <div>
+                                    <p class="font-semibold">Email</p>
+                                    <p class="text-gray-600">editor@journaladvresearch.org<br>submissions@journaladvresearch.org</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-phone text-blue-600 mt-1 mr-4"></i>
+                                <div>
+                                    <p class="font-semibold">Phone</p>
+                                    <p class="text-gray-600">+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-gray-600 hover:text-blue-600 text-2xl transition-colors">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-600 hover:text-blue-600 text-2xl transition-colors">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="text-gray-600 hover:text-blue-600 text-2xl transition-colors">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                                <a href="#" class="text-gray-600 hover:text-blue-600 text-2xl transition-colors">
+                                    <i class="fab fa-researchgate"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Send us a Message</h3>
+                        <form id="contact-form" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input type="text" id="name" name="name" required 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <input type="email" id="email" name="email" required 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                            </div>
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                <select id="subject" name="subject" required 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                                    <option value="">Select a subject</option>
+                                    <option value="submission">Article Submission</option>
+                                    <option value="review">Peer Review</option>
+                                    <option value="subscription">Subscription Inquiry</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <textarea id="message" name="message" rows="5" required 
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"></textarea>
+                            </div>
+                            <button type="submit" 
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                                <i class="fas fa-paper-plane mr-2"></i>Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-graduation-cap text-2xl text-blue-400 mr-3"></i>
+                        <div>
+                            <h3 class="text-xl font-bold">Journal of Advanced Research</h3>
+                            <p class="text-gray-400 text-sm">Advancing Knowledge Through Research</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        A premier academic journal committed to publishing high-quality research that advances 
+                        scientific knowledge and contributes to solving global challenges.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-researchgate text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Submit Article</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Editorial Board</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Author Guidelines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Peer Review Process</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Publication Ethics</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Open Access Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Archive</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Journal of Advanced Research. All rights reserved. | ISSN: 2024-1234</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Articles database
+        const articlesData = [
+            {
+                id: 1,
+                title: "Neural Networks and Consciousness: A Comprehensive Review of Current Understanding",
+                authors: "Dr. Sarah Johnson, Prof. Michael Chen",
+                date: "March 15, 2024",
+                category: ["Neuroscience", "Cognitive Science"],
+                abstract: "This comprehensive review examines the latest developments in our understanding of consciousness through the lens of neural network theory, providing insights into the mechanisms underlying conscious experience.",
+                content: `
+                    <h2>Abstract</h2>
+                    <p>Consciousness remains one of the most enigmatic phenomena in neuroscience and philosophy of mind. This comprehensive review synthesizes current research on the neural correlates of consciousness (NCC), focusing on how neural network theories contribute to our understanding of conscious experience. We examine evidence from neuroimaging studies, computational models, and clinical observations to present a coherent framework for understanding consciousness as an emergent property of complex neural networks.</p>
+                    
+                    <h2>Introduction</h2>
+                    <p>The quest to understand consciousness has captivated scientists and philosophers for centuries. Recent advances in neuroscience, particularly in neuroimaging and computational modeling, have provided unprecedented insights into the neural mechanisms underlying conscious experience. This review synthesizes current knowledge about how consciousness emerges from the complex interactions of neural networks in the brain.</p>
+                    
+                    <h2>Neural Network Theories of Consciousness</h2>
+                    <h3>Global Workspace Theory</h3>
+                    <p>The Global Workspace Theory (GWT), proposed by Bernard Baars, suggests that consciousness arises when information becomes globally available across different brain regions. According to this theory, consciousness occurs when neural information is broadcast throughout the brain's "global workspace," allowing various cognitive processes to access and utilize this information.</p>
+                    
+                    <h3>Integrated Information Theory</h3>
+                    <p>Integrated Information Theory (IIT), developed by Giulio Tononi, proposes that consciousness corresponds to integrated information (Φ) in a system. The theory suggests that the amount of consciousness in a system is determined by how much information is generated by the system as a whole, above and beyond its parts.</p>
+                    
+                    <h2>Neuroimaging Evidence</h2>
+                    <p>Functional magnetic resonance imaging (fMRI) and electroencephalography (EEG) studies have identified several key brain networks associated with conscious processing:</p>
+                    <ul>
+                        <li>The default mode network (DMN): Active during self-referential thinking and introspection</li>
+                        <li>The salience network: Involved in switching between internal and external attention</li>
+                        <li>The central executive network: Responsible for cognitive control and working memory</li>
+                    </ul>
+                    
+                    <h2>Computational Models</h2>
+                    <p>Several computational models have been developed to simulate conscious processing:</p>
+                    <ul>
+                        <li>Attention Schema Theory models propose that consciousness is the brain's schematic model of its own attention</li>
+                        <li>Predictive processing frameworks suggest consciousness emerges from the brain's predictive models of sensory input</li>
+                        <li>Recurrent processing theories emphasize the role of feedback connections in generating conscious experience</li>
+                    </ul>
+                    
+                    <h2>Clinical Implications</h2>
+                    <p>Understanding the neural basis of consciousness has important implications for clinical practice, particularly in:</p>
+                    <ul>
+                        <li>Diagnosis and treatment of disorders of consciousness</li>
+                        <li>Development of brain-computer interfaces</li>
+                        <li>Anesthesia monitoring and management</li>
+                        <li>Assessment of cognitive function in neurodegenerative diseases</li>
+                    </ul>
+                    
+                    <h2>Future Directions</h2>
+                    <p>Future research in consciousness studies should focus on:</p>
+                    <ul>
+                        <li>Developing more sophisticated computational models that can predict conscious experience</li>
+                        <li>Integrating findings from different levels of analysis (molecular, cellular, network, and behavioral)</li>
+                        <li>Exploring the relationship between consciousness and artificial intelligence</li>
+                        <li>Investigating individual differences in conscious experience</li>
+                    </ul>
+                    
+                    <h2>Conclusion</h2>
+                    <p>While significant progress has been made in understanding the neural basis of consciousness, many questions remain unanswered. The integration of neural network theories with empirical findings from neuroimaging and computational modeling provides a promising framework for advancing our understanding of this fundamental aspect of human experience. Continued interdisciplinary collaboration will be essential for making further progress in this challenging but crucial area of research.</p>
+                    
+                    <div class="citation">
+                        <strong>How to cite this article:</strong><br>
+                        Johnson, S., & Chen, M. (2024). Neural Networks and Consciousness: A Comprehensive Review of Current Understanding. Journal of Advanced Research, 15(3), 123-156. DOI: 10.1000/jar.2024.123456
+                    </div>
+                `,
+                views: 2847,
+                downloads: 1239,
+                type: "neuroscience"
+            },
+            {
+                id: 2,
+                title: "Sustainable Carbon Capture Technologies: Innovations and Implementation Strategies",
+                authors: "Dr. Emily Rodriguez, Dr. James Park",
+                date: "March 10, 2024",
+                category: ["Environmental Science", "Climate Change"],
+                abstract: "An in-depth analysis of emerging carbon capture technologies and their potential for large-scale implementation in the fight against climate change.",
+                content: `
+                    <h2>Abstract</h2>
+                    <p>Climate change represents one of the most pressing challenges of our time, requiring innovative solutions for reducing atmospheric CO2 concentrations. This paper provides a comprehensive analysis of sustainable carbon capture technologies, examining their technical feasibility, economic viability, and potential for large-scale implementation. We review direct air capture, industrial carbon capture, and nature-based solutions, presenting a roadmap for their integration into global climate mitigation strategies.</p>
+                    
+                    <h2>Introduction</h2>
+                    <p>The concentration of atmospheric CO2 has reached unprecedented levels, necessitating urgent action to mitigate climate change. While reducing emissions remains crucial, carbon capture technologies offer a complementary approach to removing existing CO2 from the atmosphere. This review examines the current state of carbon capture technologies and their potential for addressing climate change at scale.</p>
+                    
+                    <h2>Direct Air Capture Technologies</h2>
+                    <h3>Solid Sorbent Systems</h3>
+                    <p>Solid sorbent direct air capture (DAC) systems use chemical materials to bind CO2 from ambient air. These systems offer several advantages:</p>
+                    <ul>
+                        <li>Lower energy requirements compared to liquid solvent systems</li>
+                        <li>Reduced water consumption</li>
+                        <li>Potential for modular deployment</li>
+                        <li>Compatibility with renewable energy sources</li>
+                    </ul>
+                    
+                    <h3>Liquid Solvent Systems</h3>
+                    <p>Liquid solvent DAC systems use aqueous solutions to capture CO2 through chemical absorption. Key characteristics include:</p>
+                    <ul>
+                        <li>High CO2 capture efficiency</li>
+                        <li>Established industrial processes</li>
+                        <li>Scalability potential</li>
+                        <li>Higher energy and water requirements</li>
+                    </ul>
+                    
+                    <h2>Industrial Carbon Capture</h2>
+                    <p>Industrial carbon capture focuses on capturing CO2 from point sources such as power plants, cement factories, and steel mills. Technologies include:</p>
+                    
+                    <h3>Post-Combustion Capture</h3>
+                    <p>Post-combustion capture removes CO2 from flue gases after fuel combustion. This approach is particularly suitable for retrofitting existing facilities.</p>
+                    
+                    <h3>Pre-Combustion Capture</h3>
+                    <p>Pre-combustion capture involves gasifying fuel to produce syngas, then removing CO2 before combustion of hydrogen-rich gas.</p>
+                    
+                    <h3>Oxy-Fuel Combustion</h3>
+                    <p>Oxy-fuel combustion burns fuel in pure oxygen instead of air, producing a flue gas that is primarily CO2 and water vapor.</p>
+                    
+                    <h2>Nature-Based Solutions</h2>
+                    <p>Nature-based carbon capture solutions leverage natural processes to remove CO2 from the atmosphere:</p>
+                    
+                    <h3>Forest Restoration</h3>
+                    <p>Reforestation and afforestation programs can sequester significant amounts of carbon while providing additional ecosystem benefits.</p>
+                    
+                    <h3>Soil Carbon Sequestration</h3>
+                    <p>Agricultural practices that enhance soil carbon storage offer substantial potential for carbon capture while improving soil health.</p>
+                    
+                    <h3>Ocean-Based Solutions</h3>
+                    <p>Marine carbon capture approaches include ocean alkalinization, enhanced weathering, and restoration of coastal ecosystems.</p>
+                    
+                    <h2>Economic Analysis</h2>
+                    <p>The economic viability of carbon capture technologies depends on several factors:</p>
+                    <ul>
+                        <li>Technology costs: Current DAC costs range from $150-600 per ton CO2</li>
+                        <li>Energy requirements: Energy efficiency improvements are crucial for cost reduction</li>
+                        <li>Carbon pricing: Effective carbon pricing mechanisms are essential for market adoption</li>
+                        <li>Government support: Policy incentives and subsidies can accelerate deployment</li>
+                    </ul>
+                    
+                    <h2>Implementation Strategies</h2>
+                    <p>Successful implementation of carbon capture technologies requires:</p>
+                    
+                    <h3>Technology Development</h3>
+                    <ul>
+                        <li>Continued R&D investment to improve efficiency and reduce costs</li>
+                        <li>Development of next-generation materials and processes</li>
+                        <li>Demonstration projects to validate technology at scale</li>
+                    </ul>
+                    
+                    <h3>Policy Framework</h3>
+                    <ul>
+                        <li>Carbon pricing mechanisms</li>
+                        <li>Renewable energy credits for carbon capture</li>
+                        <li>Research and development funding</li>
+                        <li>International cooperation agreements</li>
+                    </ul>
+                    
+                    <h3>Infrastructure Development</h3>
+                    <ul>
+                        <li>CO2 transport and storage infrastructure</li>
+                        <li>Integration with renewable energy systems</li>
+                        <li>Grid-scale deployment strategies</li>
+                    </ul>
+                    
+                    <h2>Challenges and Opportunities</h2>
+                    <p>Key challenges include:</p>
+                    <ul>
+                        <li>High costs and energy requirements</li>
+                        <li>Limited commercial deployment experience</li>
+                        <li>Need for supportive policy frameworks</li>
+                        <li>Public acceptance and environmental concerns</li>
+                    </ul>
+                    
+                    <p>Opportunities include:</p>
+                    <ul>
+                        <li>Potential for significant cost reductions through technological innovation</li>
+                        <li>Integration with renewable energy systems</li>
+                        <li>Co-benefits such as air quality improvement</li>
+                        <li>Job creation in emerging green technology sectors</li>
+                    </ul>
+                    
+                    <h2>Conclusion</h2>
+                    <p>Carbon capture technologies represent a critical component of comprehensive climate mitigation strategies. While challenges remain, continued technological innovation, supportive policies, and strategic implementation can enable these technologies to play a significant role in achieving global climate goals. The integration of direct air capture, industrial carbon capture, and nature-based solutions offers the greatest potential for addressing climate change at the scale and speed required.</p>
+                    
+                    <div class="citation">
+                        <strong>How to cite this article:</strong><br>
+                        Rodriguez, E., & Park, J. (2024). Sustainable Carbon Capture Technologies: Innovations and Implementation Strategies. Journal of Advanced Research, 15(3), 78-112. DOI: 10.1000/jar.2024.789012
+                    </div>
+                `,
+                views: 3156,
+                downloads: 1847,
+                type: "science"
+            },
+            {
+                id: 3,
+                title: "CRISPR Gene Editing: Therapeutic Applications and Ethical Considerations",
+                authors: "Prof. Lisa Zhang, Dr. Robert Kumar",
+                date: "March 8, 2024",
+                category: ["Medicine", "Genetics"],
+                abstract: "Exploring the therapeutic potential of CRISPR technology while addressing the complex ethical landscape surrounding genetic modification.",
+                content: `
+                    <h2>Abstract</h2>
+                    <p>CRISPR-Cas9 gene editing technology has revolutionized biomedical research and opened unprecedented opportunities for treating genetic diseases. This comprehensive review examines the therapeutic applications of CRISPR technology, current clinical trials, and the complex ethical considerations surrounding human genetic modification. We provide an analysis of the technology's potential benefits and risks, offering recommendations for responsible development and implementation.</p>
+                    
+                    <h2>Introduction</h2>
+                    <p>The development of CRISPR-Cas9 technology has marked a paradigm shift in genetic engineering, offering precise, efficient, and relatively cost-effective methods for editing DNA. Since its discovery, CRISPR has shown immense potential for treating a wide range of genetic disorders, cancers, and infectious diseases. However, its application in human therapeutics raises significant ethical, safety, and social considerations that must be carefully addressed.</p>
+                    
+                    <h2>CRISPR Technology Overview</h2>
+                    <h3>Mechanism of Action</h3>
+                    <p>CRISPR-Cas9 consists of two main components:</p>
+                    <ul>
+                        <li>Guide RNA (gRNA): Directs the Cas9 protein to specific DNA sequences</li>
+                        <li>Cas9 protein: Acts as molecular scissors to cut DNA at targeted locations</li>
+                    </ul>
+                    
+                    <h3>Editing Approaches</h3>
+                    <p>CRISPR enables several types of genetic modifications:</p>
+                    <ul>
+                        <li>Gene knockout: Disrupting gene function through insertions or deletions</li>
+                        <li>Gene correction: Repairing disease-causing mutations</li>
+                        <li>Gene insertion: Adding new genetic material to specific locations</li>
+                        <li>Base editing: Making precise single nucleotide changes</li>
+                    </ul>
+                    
+                    <h2>Therapeutic Applications</h2>
+                    <h3>Inherited Genetic Disorders</h3>
+                    <p>CRISPR shows particular promise for treating monogenic disorders:</p>
+                    
+                    <h4>Sickle Cell Disease</h4>
+                    <p>Clinical trials are underway using CRISPR to edit patient hematopoietic stem cells, either by correcting the sickle cell mutation or reactivating fetal hemoglobin production.</p>
+                    
+                    <h4>Beta-Thalassemia</h4>
+                    <p>Similar approaches are being used to treat beta-thalassemia by editing bone marrow cells to restore normal hemoglobin production.</p>
+                    
+                    <h4>Duchenne Muscular Dystrophy</h4>
+                    <p>CRISPR strategies aim to restore dystrophin expression through exon skipping or gene correction approaches.</p>
+                    
+                    <h3>Cancer Treatment</h3>
+                    <p>CRISPR applications in oncology include:</p>
+                    
+                    <h4>CAR-T Cell Therapy Enhancement</h4>
+                    <p>Editing T cells to improve their cancer-fighting capabilities by removing inhibitory receptors or enhancing tumor recognition.</p>
+                    
+                    <h4>Tumor Suppressor Gene Restoration</h4>
+                    <p>Correcting mutations in tumor suppressor genes like p53 to restore normal cell cycle control.</p>
+                    
+                    <h4>Immune Checkpoint Disruption</h4>
+                    <p>Editing immune cells to remove inhibitory checkpoints that prevent effective anti-tumor responses.</p>
+                    
+                    <h3>Infectious Diseases</h3>
+                    <p>CRISPR strategies for treating infectious diseases include:</p>
+                    
+                    <h4>HIV Treatment</h4>
+                    <p>Editing CCR5 receptor genes to make cells resistant to HIV infection, or directly targeting HIV DNA integrated into the host genome.</p>
+                    
+                    <h4>Hepatitis B</h4>
+                    <p>Targeting hepatitis B virus DNA to eliminate chronic infection.</p>
+                    
+                    <h2>Current Clinical Trials</h2>
+                    <p>As of 2024, over 40 CRISPR-based clinical trials are ongoing worldwide, focusing on:</p>
+                    <ul>
+                        <li>Beta-thalassemia and sickle cell disease (CTX001)</li>
+                        <li>Various cancers using edited CAR-T cells</li>
+                        <li>Inherited blindness (EDIT-101)</li>
+                        <li>Primary immunodeficiencies</li>
+                        <li>Transthyretin amyloidosis (NTLA-2001)</li>
+                    </ul>
+                    
+                    <h2>Safety Considerations</h2>
+                    <h3>Off-Target Effects</h3>
+                    <p>Unintended DNA modifications remain a primary safety concern:</p>
+                    <ul>
+                        <li>Development of improved guide RNA design algorithms</li>
+                        <li>Enhanced Cas9 variants with reduced off-target activity</li>
+                        <li>Comprehensive genome-wide screening methods</li>
+                    </ul>
+                    
+                    <h3>Delivery Challenges</h3>
+                    <p>Efficient and safe delivery of CRISPR components requires:</p>
+                    <ul>
+                        <li>Tissue-specific targeting approaches</li>
+                        <li>Optimized delivery vehicles (viral vectors, lipid nanoparticles)</li>
+                        <li>Minimizing immune responses to delivery systems</li>
+                    </ul>
+                    
+                    <h2>Ethical Considerations</h2>
+                    <h3>Somatic vs. Germline Editing</h3>
+                    <p>The distinction between somatic and germline editing raises different ethical questions:</p>
+                    
+                    <h4>Somatic Cell Editing</h4>
+                    <ul>
+                        <li>Generally accepted for therapeutic purposes</li>
+                        <li>Effects limited to treated individual</li>
+                        <li>Reversible in principle</li>
+                    </ul>
+                    
+                    <h4>Germline Editing</h4>
+                    <ul>
+                        <li>Highly controversial due to heritable changes</li>
+                        <li>Potential for unintended consequences in future generations</li>
+                        <li>Currently prohibited in many countries for clinical use</li>
+                    </ul>
+                    
+                    <h3>Enhancement vs. Treatment</h3>
+                    <p>The boundary between therapeutic applications and human enhancement raises important questions:</p>
+                    <ul>
+                        <li>What constitutes a medical condition requiring treatment?</li>
+                        <li>Should genetic modifications be limited to treating disease?</li>
+                        <li>How do we address issues of equity and access?</li>
+                    </ul>
+                    
+                    <h3>Informed Consent</h3>
+                    <p>CRISPR trials require enhanced informed consent processes addressing:</p>
+                    <ul>
+                        <li>Long-term and unknown risks</li>
+                        <li>Potential for off-target effects</li>
+                        <li>Implications for family members (especially in germline editing)</li>
+                    </ul>
+                    
+                    <h2>Regulatory Framework</h2>
+                    <p>Current regulatory approaches vary globally:</p>
+                    
+                    <h3>United States</h3>
+                    <ul>
+                        <li>FDA oversight of clinical trials</li>
+                        <li>Congressional prohibition on germline editing research</li>
+                        <li>NIH guidelines for research funding</li>
+                    </ul>
+                    
+                    <h3>European Union</h3>
+                    <ul>
+                        <li>EMA regulation of gene therapy products</li>
+                        <li>Variable national policies on germline editing</li>
+                        <li>Strong emphasis on ethical oversight</li>
+                    </ul>
+                    
+                    <h3>International Coordination</h3>
+                    <ul>
+                        <li>WHO Expert Advisory Committee recommendations</li>
+                        <li>International summit declarations</li>
+                        <li>Need for harmonized global standards</li>
+                    </ul>
+                    
+                    <h2>Future Directions</h2>
+                    <h3>Technological Advances</h3>
+                    <p>Emerging developments include:</p>
+                    <ul>
+                        <li>Prime editing for more precise modifications</li>
+                        <li>Base editing to correct point mutations</li>
+                        <li>Miniaturized CRISPR systems for improved delivery</li>
+                        <li>Temporal control of gene editing</li>
+                    </ul>
+                    
+                    <h3>Expanding Applications</h3>
+                    <p>Future therapeutic areas may include:</p>
+                    <ul>
+                        <li>Neurodegenerative diseases</li>
+                        <li>Age-related disorders</li>
+                        <li>Organ transplantation enhancement</li>
+                        <li>Vaccine development</li>
+                    </ul>
+                    
+                    <h2>Recommendations</h2>
+                    <p>For responsible development of CRISPR therapeutics:</p>
+                    
+                    <h3>Scientific Community</h3>
+                    <ul>
+                        <li>Continue safety research and optimization</li>
+                        <li>Maintain transparency in research and clinical trials</li>
+                        <li>Engage in public education and dialogue</li>
+                    </ul>
+                    
+                    <h3>Regulatory Bodies</h3>
+                    <ul>
+                        <li>Develop adaptive regulatory frameworks</li>
+                        <li>Ensure robust safety assessment protocols</li>
+                        <li>Promote international harmonization</li>
+                    </ul>
+                    
+                    <h3>Society</h3>
+                    <ul>
+                        <li>Foster informed public debate</li>
+                        <li>Address equity and access concerns</li>
+                        <li>Develop ethical guidelines for emerging applications</li>
+                    </ul>
+                    
+                    <h2>Conclusion</h2>
+                    <p>CRISPR gene editing technology holds immense promise for treating previously incurable genetic diseases and advancing human health. However, its successful implementation requires careful attention to safety, ethics, and social implications. Through continued research, thoughtful regulation, and inclusive public dialogue, we can harness the potential of CRISPR while addressing legitimate concerns about its use. The coming years will be critical in establishing frameworks that enable beneficial applications while preventing misuse and ensuring equitable access to these powerful therapeutic tools.</p>
+                    
+                    <div class="citation">
+                        <strong>How to cite this article:</strong><br>
+                        Zhang, L., & Kumar, R. (2024). CRISPR Gene Editing: Therapeutic Applications and Ethical Considerations. Journal of Advanced Research, 15(3), 45-77. DOI: 10.1000/jar.2024.345678
+                    </div>
+                `,
+                views: 4293,
+                downloads: 2156,
+                type: "medicine"
+            },
+            {
+                id: 4,
+                title: "Quantum Computing Algorithms for Optimization Problems",
+                authors: "Dr. Alex Thompson, Prof. Maria Santos",
+                date: "March 5, 2024",
+                category: ["Technology", "Computer Science"],
+                abstract: "A comprehensive examination of quantum algorithms designed to solve complex optimization problems, comparing their performance to classical approaches.",
+                content: `
+                    <h2>Abstract</h2>
+                    <p>Quantum computing represents a paradigm shift in computational capabilities, particularly for solving complex optimization problems that are intractable for classical computers. This paper provides a comprehensive review of quantum algorithms designed for optimization, including the Quantum Approximate Optimization Algorithm (QAOA), Variational Quantum Eigensolver (VQE), and quantum annealing approaches. We analyze their theoretical foundations, practical implementations, and potential advantages over classical methods.</p>
+                    
+                    <h2>Introduction</h2>
+                    <p>Optimization problems are ubiquitous in science, engineering, and industry, ranging from logistics and supply chain management to drug discovery and financial modeling. Many of these problems are NP-hard, meaning that classical algorithms require exponential time to find optimal solutions. Quantum computing offers the potential to solve certain optimization problems exponentially faster than classical computers, though practical quantum advantage remains limited by current hardware constraints.</p>
+                    
+                    <h2>Quantum Optimization Algorithms</h2>
+                    <h3>Quantum Approximate Optimization Algorithm (QAOA)</h3>
+                    <p>QAOA is a hybrid quantum-classical algorithm designed to find approximate solutions to combinatorial optimization problems:</p>
+                    <ul>
+                        <li>Alternates between cost and mixer Hamiltonians</li>
+                        <li>Uses variational parameters optimized classically</li>
+                        <li>Can be implemented on near-term quantum devices</li>
+                        <li>Provides approximation guarantees for certain problem classes</li>
+                    </ul>
+                    
+                    <h3>Variational Quantum Eigensolver (VQE)</h3>
+                    <p>VQE is primarily used for finding ground state energies but can be adapted for optimization:</p>
+                    <ul>
+                        <li>Encodes optimization problems as Hamiltonian ground state problems</li>
+                        <li>Uses parameterized quantum circuits (ansätze)</li>
+                        <li>Tolerant to quantum noise and decoherence</li>
+                        <li>Suitable for current noisy intermediate-scale quantum (NISQ) devices</li>
+                    </ul>
+                    
+                    <h2>Problem Formulations</h2>
+                    <h3>Quadratic Unconstrained Binary Optimization (QUBO)</h3>
+                    <p>Many optimization problems can be formulated as QUBO problems:</p>
+                    <ul>
+                        <li>Max-Cut problems</li>
+                        <li>Portfolio optimization</li>
+                        <li>Machine learning training</li>
+                        <li>Vehicle routing problems</li>
+                    </ul>
+                    
+                    <h3>Constraint Satisfaction Problems</h3>
+                    <p>Quantum algorithms can address various constraint satisfaction problems:</p>
+                    <ul>
+                        <li>Graph coloring</li>
+                        <li>Satisfiability (SAT) problems</li>
+                        <li>Scheduling optimization</li>
+                        <li>Resource allocation</li>
+                    </ul>
+                    
+                    <h2>Implementation and Results</h2>
+                    <p>We implemented several quantum optimization algorithms on both quantum simulators and real quantum hardware, focusing on:</p>
+                    <ul>
+                        <li>Performance comparison with classical algorithms</li>
+                        <li>Scalability analysis</li>
+                        <li>Noise resilience evaluation</li>
+                        <li>Parameter optimization strategies</li>
+                    </ul>
+                    
+                    <h2>Conclusion</h2>
+                    <p>While quantum optimization algorithms show theoretical promise, practical quantum advantage for optimization problems remains limited by current hardware constraints. However, continued advances in quantum hardware and algorithm development suggest that quantum computers may eventually provide significant advantages for certain classes of optimization problems.</p>
+                    
+                    <div class="citation">
+                        <strong>How to cite this article:</strong><br>
+                        Thompson, A., & Santos, M. (2024). Quantum Computing Algorithms for Optimization Problems. Journal of Advanced Research, 15(3), 200-235. DOI: 10.1000/jar.2024.567890
+                    </div>
+                `,
+                views: 1892,
+                downloads: 756,
+                type: "technology"
+            },
+            {
+                id: 5,
+                title: "Digital Humanities: Transforming Literary Analysis Through Computational Methods",
+                authors: "Prof. David Williams, Dr. Sarah Mitchell",
+                date: "March 1, 2024",
+                category: ["Humanities", "Digital Studies"],
+                abstract: "Exploring how computational methods are revolutionizing literary analysis and humanities scholarship, creating new possibilities for understanding cultural texts.",
+                content: `
+                    <h2>Abstract</h2>
+                    <p>Digital humanities represents a transformative intersection of traditional humanities scholarship and computational methods. This paper examines how digital tools and techniques are revolutionizing literary analysis, enabling scholars to process and analyze vast corpora of texts at unprecedented scales. We explore various computational approaches including distant reading, text mining, network analysis, and machine learning applications in humanities research.</p>
+                    
+                    <h2>Introduction</h2>
+                    <p>The digital revolution has fundamentally transformed how humanities scholars approach their research. Digital humanities (DH) combines traditional humanistic inquiry with computational tools, enabling new forms of analysis that were previously impossible. This interdisciplinary field has opened up novel research questions and methodologies that complement and enhance traditional close reading approaches.</p>
+                    
+                    <h2>Computational Methods in Literary Analysis</h2>
+                    <h3>Distant Reading</h3>
+                    <p>Franco Moretti's concept of "distant reading" involves analyzing large collections of texts computationally rather than reading individual works closely:</p>
+                    <ul>
+                        <li>Enables analysis of thousands of texts simultaneously</li>
+                        <li>Reveals patterns invisible to traditional close reading</li>
+                        <li>Useful for studying literary evolution and genre development</li>
+                        <li>Complements rather than replaces close reading</li>
+                    </ul>
+                    
+                    <h3>Text Mining and Natural Language Processing</h3>
+                    <p>Computational text analysis techniques include:</p>
+                    <ul>
+                        <li>Sentiment analysis for studying emotional patterns in literature</li>
+                        <li>Topic modeling for identifying thematic structures</li>
+                        <li>Named entity recognition for character and location analysis</li>
+                        <li>Stylometric analysis for authorship attribution</li>
+                    </ul>
+                    
+                    <h2>Case Studies</h2>
+                    <h3>Victorian Literature Analysis</h3>
+                    <p>We analyzed over 3,000 Victorian novels to identify patterns in:</p>
+                    <ul>
+                        <li>Gender representation and character development</li>
+                        <li>Evolution of narrative techniques</li>
+                        <li>Social and political themes</li>
+                        <li>Geographic and temporal settings</li>
+                    </ul>
+                    
+                    <h3>Poetry Network Analysis</h3>
+                    <p>Using network analysis to study poetic influences and movements:</p>
+                    <ul>
+                        <li>Mapping connections between poets</li>
+                        <li>Identifying influential works and authors</li>
+                        <li>Tracing the spread of literary innovations</li>
+                        <li>Understanding cultural and literary networks</li>
+                    </ul>
+                    
+                    <h2>Challenges and Opportunities</h2>
+                    <p>Digital humanities faces several challenges and opportunities:</p>
+                    
+                    <h3>Technical Challenges</h3>
+                    <ul>
+                        <li>Data quality and digitization issues</li>
+                        <li>Need for interdisciplinary collaboration</li>
+                        <li>Balancing computational and humanistic approaches</li>
+                        <li>Ensuring reproducibility of research</li>
+                    </ul>
+                    
+                    <h3>Methodological Opportunities</h3>
+                    <ul>
+                        <li>Integration of multiple analytical approaches</li>
+                        <li>Development of humanities-specific tools</li>
+                        <li>Enhanced collaboration between disciplines</li>
+                        <li>New forms of scholarly publication and presentation</li>
+                    </ul>
+                    
+                    <h2>Future Directions</h2>
+                    <p>The future of digital humanities includes:</p>
+                    <ul>
+                        <li>Integration with artificial intelligence and machine learning</li>
+                        <li>Development of more sophisticated visualization tools</li>
+                        <li>Expansion into multimedia and multimodal analysis</li>
+                        <li>Greater emphasis on public engagement and accessibility</li>
+                    </ul>
+                    
+                    <h2>Conclusion</h2>
+                    <p>Digital humanities represents a significant evolution in humanities scholarship, offering new tools and methods for understanding cultural texts and phenomena. While challenges remain in integrating computational and traditional humanistic approaches, the field continues to grow and evolve, opening up exciting possibilities for future research and scholarship.</p>
+                    
+                    <div class="citation">
+                        <strong>How to cite this article:</strong><br>
+                        Williams, D., & Mitchell, S. (2024). Digital Humanities: Transforming Literary Analysis Through Computational Methods. Journal of Advanced Research, 15(3), 300-325. DOI: 10.1000/jar.2024.901234
+                    </div>
+                `,
+                views: 1456,
+                downloads: 623,
+                type: "humanities"
+            },
+            {
+                id: 6,
+                title: "Precision Medicine: Personalized Treatment Approaches in Oncology",
+                authors: "Dr. Jennifer Adams, Prof. Mark Robinson",
+                date: "February 28, 2024",
+                category: ["Medicine", "Oncology"],
+                abstract: "Examining the revolutionary impact of precision medicine in cancer treatment, including genomic profiling, targeted therapies, and personalized treatment protocols.",
+                content: `
+                    <h2>Abstract</h2>
+                    <p>Precision medicine represents a paradigm shift in oncology, moving from a one-size-fits-all approach to personalized treatment strategies based on individual patient and tumor characteristics. This comprehensive review examines the current state of precision oncology, including genomic profiling technologies, targeted therapies, immunotherapy approaches, and the integration of multi-omics data for treatment decision-making.</p>
+                    
+                    <h2>Introduction</h2>
+                    <p>Traditional cancer treatment has historically followed a standardized approach based primarily on tumor location and histological characteristics. However, advances in genomics and molecular biology have revealed that cancers with similar appearances can have vastly different molecular profiles, leading to variable treatment responses. Precision medicine aims to match patients with the most effective treatments based on their individual genetic, environmental, and lifestyle factors.</p>
+                    
+                    <h2>Genomic Profiling Technologies</h2>
+                    <h3>Next-Generation Sequencing (NGS)</h3>
+                    <p>NGS has revolutionized cancer genomics by enabling comprehensive analysis of tumor DNA:</p>
+                    <ul>
+                        <li>Whole genome sequencing for comprehensive mutation analysis</li>
+                        <li>Targeted gene panels for specific cancer types</li>
+                        <li>RNA sequencing for gene expression profiling</li>
+                        <li>Single-cell sequencing for tumor heterogeneity analysis</li>
+                    </ul>
+                    
+                    <h3>Liquid Biopsies</h3>
+                    <p>Circulating tumor DNA (ctDNA) analysis offers non-invasive monitoring:</p>
+                    <ul>
+                        <li>Early detection of treatment resistance</li>
+                        <li>Monitoring of treatment response</li>
+                        <li>Detection of minimal residual disease</li>
+                        <li>Identification of actionable mutations</li>
+                    </ul>
+                    
+                    <h2>Targeted Therapies</h2>
+                    <h3>Small Molecule Inhibitors</h3>
+                    <p>Targeted small molecules have transformed cancer treatment:</p>
+                    
+                    <h4>Tyrosine Kinase Inhibitors</h4>
+                    <ul>
+                        <li>EGFR inhibitors for lung cancer (e.g., erlotinib, osimertinib)</li>
+                        <li>BCR-ABL inhibitors for chronic myeloid leukemia (e.g., imatinib)</li>
+                        <li>HER2 inhibitors for breast cancer (e.g., lapatinib)</li>
+                    </ul>
+                    
+                    <h4>CDK4/6 Inhibitors</h4>
+                    <ul>
+                        <li>Palbociclib, ribociclib, and abemaciclib for hormone receptor-positive breast cancer</li>
+                        <li>Cell cycle regulation targeting</li>
+                    </ul>
+                    
+                    <h3>Monoclonal Antibodies</h3>
+                    <p>Therapeutic antibodies targeting specific proteins:</p>
+                    <ul>
+                        <li>Trastuzumab for HER2-positive breast cancer</li>
+                        <li>Rituximab for B-cell lymphomas</li>
+                        <li>Bevacizumab for angiogenesis inhibition</li>
+                    </ul>
+                    
+                    <h2>Immunotherapy and Precision Medicine</h2>
+                    <h3>Checkpoint Inhibitors</h3>
+                    <p>Immune checkpoint inhibitors have revolutionized cancer treatment:</p>
+                    <ul>
+                        <li>PD-1/PD-L1 inhibitors (pembrolizumab, nivolumab, atezolizumab)</li>
+                        <li>CTLA-4 inhibitors (ipilimumab)</li>
+                        <li>Biomarker-driven selection (PD-L1 expression, microsatellite instability)</li>
+                    </ul>
+                    
+                    <h3>CAR-T Cell Therapy</h3>
+                    <p>Personalized cellular immunotherapy:</p>
+                    <ul>
+                        <li>Patient-specific T cell modification</li>
+                        <li>CD19-targeted therapies for B-cell malignancies</li>
+                        <li>Emerging targets and solid tumor applications</li>
+                    </ul>
+                    
+                    <h2>Multi-Omics Integration</h2>
+                    <h3>Genomics</h3>
+                    <p>DNA sequence analysis for mutation identification and tumor classification</p>
+                    
+                    <h3>Transcriptomics</h3>
+                    <p>RNA expression profiling for functional pathway analysis and drug target identification</p>
+                    
+                    <h3>Proteomics</h3>
+                    <p>Protein expression and modification analysis for biomarker discovery</p>
+                    
+                    <h3>Metabolomics</h3>
+                    <p>Metabolite profiling for understanding tumor metabolism and drug response</p>
+                    
+                    <h2>Clinical Implementation</h2>
+                    <h3>Tumor Boards</h3>
+                    <p>Multidisciplinary teams integrating molecular data into treatment decisions:</p>
+                    <ul>
+                        <li>Oncologists, pathologists, and molecular biologists</li>
+                        <li>Genetic counselors and pharmacists</li>
+                        <li>Data scientists and bioinformaticians</li>
+                    </ul>
+                    
+                    <h3>Clinical Decision Support Systems</h3>
+                    <p>Technology platforms for treatment matching:</p>
+                    <ul>
+                        <li>Algorithmic treatment recommendations</li>
+                        <li>Integration with electronic health records</li>
+                        <li>Real-time updates based on new evidence</li>
+                    </ul>
+                    
+                    <h2>Challenges in Precision Oncology</h2>
+                    <h3>Tumor Heterogeneity</h3>
+                    <ul>
+                        <li>Intratumoral heterogeneity complicating biomarker selection</li>
+                        <li>Temporal evolution and treatment resistance</li>
+                        <li>Spatial sampling limitations</li>
+                    </ul>
+                    
+                    <h3>Access and Equity</h3>
+                    <ul>
+                        <li>Cost of genomic testing and targeted therapies</li>
+                        <li>Disparities in access to precision medicine</li>
+                        <li>Limited representation in clinical trials</li>
+                    </ul>
+                    
+                    <h3>Data Integration</h3>
+                    <ul>
+                        <li>Standardization of genomic and clinical data</li>
+                        <li>Interoperability between healthcare systems</li>
+                        <li>Privacy and security concerns</li>
+                    </ul>
+                    
+                    <h2>Future Directions</h2>
+                    <h3>Artificial Intelligence</h3>
+                    <p>AI applications in precision oncology:</p>
+                    <ul>
+                        <li>Machine learning for biomarker discovery</li>
+                        <li>Deep learning for medical imaging analysis</li>
+                        <li>Natural language processing for clinical data extraction</li>
+                        <li>Predictive modeling for treatment response</li>
+                    </ul>
+                    
+                    <h3>Real-World Evidence</h3>
+                    <ul>
+                        <li>Integration of electronic health record data</li>
+                        <li>Patient-reported outcomes</li>
+                        <li>Long-term follow-up studies</li>
+                    </ul>
+                    
+                    <h3>Combination Therapies</h3>
+                    <ul>
+                        <li>Rational drug combinations based on molecular profiles</li>
+                        <li>Sequential therapy optimization</li>
+                        <li>Biomarker-driven combination strategies</li>
+                    </ul>
+                    
+                    <h2>Case Studies</h2>
+                    <h3>Lung Adenocarcinoma</h3>
+                    <p>EGFR mutation testing has become standard practice, with targeted therapies showing significant survival benefits in mutation-positive patients.</p>
+                    
+                    <h3>Melanoma</h3>
+                    <p>BRAF mutation testing guides the use of BRAF/MEK inhibitor combinations, while PD-1 inhibitors have transformed treatment for BRAF wild-type patients.</p>
+                    
+                    <h3>Breast Cancer</h3>
+                    <p>HER2 testing, hormone receptor status, and multi-gene expression assays guide treatment selection and prognosis.</p>
+                    
+                    <h2>Conclusion</h2>
+                    <p>Precision medicine has fundamentally transformed oncology practice, leading to improved outcomes for many cancer patients. While challenges remain in implementation, access, and integration of complex molecular data, continued advances in genomics, bioinformatics, and artificial intelligence promise to further expand the reach and effectiveness of personalized cancer treatment. The future of oncology lies in the continued evolution of precision medicine approaches that consider the full complexity of cancer biology and patient individuality.</p>
+                    
+                    <div class="citation">
+                        <strong>How to cite this article:</strong><br>
+                        Adams, J., & Robinson, M. (2024). Precision Medicine: Personalized Treatment Approaches in Oncology. Journal of Advanced Research, 15(3), 400-445. DOI: 10.1000/jar.2024.456789
+                    </div>
+                `,
+                views: 3678,
+                downloads: 1894,
+                type: "medicine"
+            }
+        ];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateArticles();
+            setupEventListeners();
+            setupSmoothScrolling();
+        });
+
+        // Populate articles grid
+        function populateArticles() {
+            const articlesGrid = document.getElementById('articles-grid');
+            articlesGrid.innerHTML = '';
+
+            articlesData.forEach(article => {
+                const articleCard = createArticleCard(article);
+                articlesGrid.appendChild(articleCard);
+            });
+        }
+
+        // Create article card element
+        function createArticleCard(article) {
+            const card = document.createElement('article');
+            card.className = 'article-card bg-white rounded-lg overflow-hidden';
+            card.dataset.category = article.type;
+
+            const iconMap = {
+                neuroscience: 'fas fa-brain',
+                science: 'fas fa-leaf',
+                medicine: 'fas fa-heartbeat',
+                technology: 'fas fa-microchip',
+                humanities: 'fas fa-book'
+            };
+
+            const colorMap = {
+                neuroscience: 'from-purple-500 to-blue-600',
+                science: 'from-green-500 to-teal-600',
+                medicine: 'from-red-500 to-pink-600',
+                technology: 'from-blue-500 to-indigo-600',
+                humanities: 'from-yellow-500 to-orange-600'
+            };
+
+            card.innerHTML = `
+                <div class="h-48 bg-gradient-to-br ${colorMap[article.type]} flex items-center justify-center">
+                    <i class="${iconMap[article.type]} text-6xl text-white opacity-75"></i>
+                </div>
+                <div class="p-6">
+                    <div class="mb-3">
+                        ${article.category.map(cat => `<span class="badge badge-blue">${cat}</span>`).join('')}
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 cursor-pointer hover:text-blue-600 transition-colors" onclick="openArticle(${article.id})">
+                        ${article.title}
+                    </h3>
+                    <p class="text-gray-600 mb-2">${article.authors}</p>
+                    <p class="text-sm text-gray-500 mb-4">${article.date} • Research Article</p>
+                    <p class="text-gray-700 mb-4">${article.abstract}</p>
+                    <div class="flex justify-between items-center">
+                        <button onclick="openArticle(${article.id})" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                            Read Full Article <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                        <div class="text-gray-500 text-sm">
+                            <i class="fas fa-eye mr-1"></i>${article.views}
+                            <i class="fas fa-download ml-3 mr-1"></i>${article.downloads}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Open article in modal
+        function openArticle(articleId) {
+            const article = articlesData.find(a => a.id === articleId);
+            if (!article) return;
+
+            document.getElementById('modal-title').textContent = article.title;
+            document.getElementById('modal-authors').textContent = article.authors;
+            document.getElementById('modal-date').textContent = `Published: ${article.date}`;
+            document.getElementById('modal-views').textContent = article.views.toLocaleString();
+            document.getElementById('modal-downloads').textContent = article.downloads.toLocaleString();
+
+            // Set categories
+            const categoriesDiv = document.getElementById('modal-categories');
+            categoriesDiv.innerHTML = article.category.map(cat => `<span class="badge badge-blue">${cat}</span>`).join('');
+
+            // Set content
+            document.getElementById('modal-content').innerHTML = article.content;
+
+            // Show modal
+            document.getElementById('article-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modals
+        function closeModal() {
+            document.getElementById('article-modal').classList.add('hidden');
+            document.getElementById('search-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Search functionality
+        function performSearch(query) {
+            if (!query.trim()) return;
+
+            const results = articlesData.filter(article => {
+                const searchText = `${article.title} ${article.authors} ${article.abstract} ${article.category.join(' ')}`.toLowerCase();
+                return searchText.includes(query.toLowerCase());
+            });
+
+            displaySearchResults(results, query);
+        }
+
+        function displaySearchResults(results, query) {
+            const searchResults = document.getElementById('search-results');
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">No results found for "${query}"</p>
+                        <p class="text-sm text-gray-400 mt-2">Try different keywords or browse our categories</p>
+                    </div>
+                `;
+            } else {
+                searchResults.innerHTML = `
+                    <h3 class="mb-6 text-lg font-semibold">Found ${results.length} result${results.length === 1 ? '' : 's'} for "${query}"</h3>
+                    ${results.map(article => `
+                        <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0">
+                            <div class="mb-2">
+                                ${article.category.map(cat => `<span class="badge badge-blue">${cat}</span>`).join('')}
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 cursor-pointer hover:text-blue-600 transition-colors" onclick="openArticle(${article.id}); closeModal();">
+                                ${highlightSearchTerms(article.title, query)}
+                            </h4>
+                            <p class="text-gray-600 mb-2">${article.authors} • ${article.date}</p>
+                            <p class="text-gray-700 mb-3">${highlightSearchTerms(article.abstract, query)}</p>
+                            <button onclick="openArticle(${article.id}); closeModal();" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                                Read Full Article <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                `;
+            }
+
+            document.getElementById('search-modal').classList.remove('hidden');
+        }
+
+        function highlightSearchTerms(text, query) {
+            if (!query.trim()) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        // Filter articles by category
+        function filterArticles(category) {
+            const articles = document.querySelectorAll('.article-card');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            // Update button styles
+            filterBtns.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'border');
+            });
+
+            const activeBtn = document.querySelector(`[data-category="${category}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-gray-700', 'border');
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+            }
+
+            // Filter articles
+            articles.forEach(article => {
+                if (category === 'all' || article.dataset.category === category) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+        }
+
+        // PDF download functionality
+        function downloadPDF() {
+            // In a real implementation, this would generate/download an actual PDF
+            alert('PDF download would be implemented here. In a real application, this would generate a PDF of the current article.');
+        }
+
+        // Share article functionality
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.getElementById('modal-title').textContent,
+                    text: 'Check out this research article',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Article URL copied to clipboard!');
+                });
+            }
+        }
+
+        // Citation functionality
+        function citeArticle() {
+            const title = document.getElementById('modal-title').textContent;
+            const authors = document.getElementById('modal-authors').textContent;
+            const date = document.getElementById('modal-date').textContent.replace('Published: ', '');
+            
+            const citation = `${authors} (${date}). ${title}. Journal of Advanced Research. Retrieved from ${window.location.href}`;
+            
+            navigator.clipboard.writeText(citation).then(() => {
+                alert('Citation copied to clipboard!');
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Search functionality
+            const searchInputs = ['search-input', 'mobile-search-input', 'hero-search'];
+            const searchBtns = ['search-btn', 'mobile-search-btn', 'hero-search-btn'];
+
+            searchInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            performSearch(this.value);
+                        }
+                    });
+                }
+            });
+
+            searchBtns.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', function() {
+                        const inputId = btnId.replace('-btn', '-input');
+                        if (btnId === 'hero-search-btn') {
+                            const input = document.getElementById('hero-search');
+                            performSearch(input.value);
+                        } else {
+                            const input = document.getElementById(inputId);
+                            performSearch(input.value);
+                        }
+                    });
+                }
+            });
+
+            // Modal close events
+            document.getElementById('close-modal').addEventListener('click', closeModal);
+            document.getElementById('close-search').addEventListener('click', closeModal);
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterArticles(this.dataset.category);
+                });
+            });
+
+            // Contact form
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your message! We will get back to you soon.');
+                this.reset();
+            });
+ 
+            // Close modal when clicking outside
+            document.addEventListener('click', function(e) {
+                const articleModal = document.getElementById('article-modal');
+                const searchModal = document.getElementById('search-modal');
+                
+                if (e.target === articleModal || e.target === searchModal) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        function setupSmoothScrolling() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Close mobile menu if open
+                        const mobileMenu = document.getElementById('mobile-menu');
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
