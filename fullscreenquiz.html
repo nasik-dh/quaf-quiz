@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Quiz Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .quiz-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .option-btn {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .option-btn.selected {
+            border-color: #4f46e5;
+            background: rgba(79, 70, 229, 0.1);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .rejection-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #dc2626;
+            z-index: 9999;
+            display: none;
+        }
+        
+        .alert-icon {
+            font-size: 8rem;
+            color: #fbbf24;
+            animation: shake 0.5s infinite alternate;
+        }
+        
+        @keyframes shake {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .scale-in {
+            animation: scaleIn 0.3s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="quiz-card rounded-3xl p-8 md:p-12 max-w-2xl w-full text-center text-white">
+            <div class="mb-8">
+                <i class="fas fa-clipboard-check text-6xl md:text-8xl mb-6 text-yellow-300"></i>
+                <h1 class="text-3xl md:text-5xl font-bold mb-4">Secure Quiz</h1>
+                <p class="text-lg md:text-xl text-gray-200 mb-8">Test your knowledge with our interactive quiz</p>
+            </div>
+            
+            <div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-8 text-sm md:text-base">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <strong>Important:</strong> Once started, you cannot minimize, switch tabs, or exit fullscreen. Doing so will end the quiz.
+            </div>
+            
+            <button id="startBtn" class="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg md:text-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
+                <i class="fas fa-play mr-2"></i>Start Quiz
+            </button>
+        </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quizScreen" class="min-h-screen p-4 hidden">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="quiz-card rounded-2xl p-4 md:p-6 mb-6 text-white">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <h2 class="text-xl md:text-2xl font-bold">Quiz in Progress</h2>
+                        <p class="text-gray-300">Question <span id="currentQuestion">1</span> of 5</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl md:text-3xl font-bold" id="timer">10:00</div>
+                        <p class="text-gray-300 text-sm">Time Remaining</p>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="mt-4 bg-gray-700 rounded-full h-2">
+                    <div id="progressBar" class="progress-bar bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full" style="width: 20%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="quiz-card rounded-2xl p-6 md:p-8 text-white fade-in">
+                <div class="mb-8">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-6" id="questionText">What is the capital of France?</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="optionsContainer">
+                        <button class="option-btn bg-white bg-opacity-10 hover:bg-opacity-20 p-4 rounded-lg text-left" data-option="A">
+                            <span class="font-semibold text-yellow-300">A.</span> Paris
+                        </button>
+                        <button class="option-btn bg-white bg-opacity-10 hover:bg-opacity-20 p-4 rounded-lg text-left" data-option="B">
+                            <span class="font-semibold text-yellow-300">B.</span> London
+                        </button>
+                        <button class="option-btn bg-white bg-opacity-10 hover:bg-opacity-20 p-4 rounded-lg text-left" data-option="C">
+                            <span class="font-semibold text-yellow-300">C.</span> Berlin
+                        </button>
+                        <button class="option-btn bg-white bg-opacity-10 hover:bg-opacity-20 p-4 rounded-lg text-left" data-option="D">
+                            <span class="font-semibold text-yellow-300">D.</span> Madrid
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <button id="prevBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-chevron-left mr-2"></i>Previous
+                    </button>
+                    <button id="nextBtn" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300">
+                        Next<i class="fas fa-chevron-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="min-h-screen flex items-center justify-center p-4 hidden">
+        <div class="quiz-card rounded-3xl p-8 md:p-12 max-w-2xl w-full text-center text-white scale-in">
+            <div class="mb-8">
+                <i class="fas fa-trophy text-6xl md:text-8xl mb-6 text-yellow-300"></i>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Quiz Completed!</h2>
+                <div class="text-2xl md:text-3xl font-semibold mb-4">
+                    Your Score: <span id="finalScore" class="text-yellow-300">0</span>/5
+                </div>
+                <div class="text-lg text-gray-200 mb-8" id="scoreMessage">Great job!</div>
+            </div>
+            
+            <button id="restartBtn" class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-full text-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+                <i class="fas fa-redo mr-2"></i>Take Quiz Again
+            </button>
+        </div>
+    </div>
+
+    <!-- Rejection Screen -->
+    <div id="rejectionScreen" class="rejection-screen flex items-center justify-center">
+        <div class="text-center text-white">
+            <i class="fas fa-exclamation-triangle alert-icon mb-8"></i>
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">QUIZ REJECTED</h1>
+            <p class="text-xl md:text-2xl">Your quiz was rejected by owner</p>
+            <p class="text-lg mt-4 text-gray-200">You switched tabs or exited fullscreen mode</p>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const quizData = [
+            {
+                question: "What is the capital of France?",
+                options: ["Paris", "London", "Berlin", "Madrid"],
+                correct: 0
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                correct: 1
+            },
+            {
+                question: "What is the largest ocean on Earth?",
+                options: ["Atlantic", "Indian", "Arctic", "Pacific"],
+                correct: 3
+            },
+            {
+                question: "Who painted the Mona Lisa?",
+                options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+                correct: 2
+            },
+            {
+                question: "What is the chemical symbol for gold?",
+                options: ["Go", "Gd", "Au", "Ag"],
+                correct: 2
+            }
+        ];
+
+        // Quiz State
+        let currentQuestionIndex = 0;
+        let selectedAnswers = [];
+        let quizStartTime;
+        let timerInterval;
+        let isQuizActive = false;
+
+        // DOM Elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const rejectionScreen = document.getElementById('rejectionScreen');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // Initialize
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', nextQuestion);
+        prevBtn.addEventListener('click', prevQuestion);
+        restartBtn.addEventListener('click', restartQuiz);
+
+        // Anti-cheating measures
+        document.addEventListener('visibilitychange', function() {
+            if (isQuizActive && document.hidden) {
+                endQuizWithRejection();
+            }
+        });
+
+        document.addEventListener('fullscreenchange', function() {
+            if (isQuizActive && !document.fullscreenElement) {
+                endQuizWithRejection();
+            }
+        });
+
+        // Prevent common shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (isQuizActive) {
+                // Prevent Alt+Tab, Ctrl+Tab, F11, etc.
+                if (e.altKey || e.ctrlKey || e.key === 'F11' || e.key === 'Tab') {
+                    e.preventDefault();
+                    endQuizWithRejection();
+                }
+            }
+        });
+
+        // Prevent right-click context menu during quiz
+        document.addEventListener('contextmenu', function(e) {
+            if (isQuizActive) {
+                e.preventDefault();
+            }
+        });
+
+        function startQuiz() {
+            // Request fullscreen
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            isQuizActive = true;
+            currentQuestionIndex = 0;
+            selectedAnswers = [];
+            quizStartTime = Date.now();
+            
+            displayQuestion();
+            startTimer();
+        }
+
+        function displayQuestion() {
+            const question = quizData[currentQuestionIndex];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn bg-white bg-opacity-10 hover:bg-opacity-20 p-4 rounded-lg text-left';
+                button.innerHTML = `<span class="font-semibold text-yellow-300">${String.fromCharCode(65 + index)}.</span> ${option}`;
+                button.dataset.option = index;
+                
+                if (selectedAnswers[currentQuestionIndex] === index) {
+                    button.classList.add('selected');
+                }
+                
+                button.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Update progress bar
+            const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.textContent = currentQuestionIndex === quizData.length - 1 ? 'Finish Quiz' : 'Next';
+            nextBtn.innerHTML = currentQuestionIndex === quizData.length - 1 ? 
+                'Finish Quiz<i class="fas fa-check ml-2"></i>' : 
+                'Next<i class="fas fa-chevron-right ml-2"></i>';
+        }
+
+        function selectOption(optionIndex) {
+            selectedAnswers[currentQuestionIndex] = optionIndex;
+            
+            // Update visual selection
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelector(`[data-option="${optionIndex}"]`).classList.add('selected');
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function startTimer() {
+            const duration = 10 * 60; // 10 minutes in seconds
+            let timeLeft = duration;
+            
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    finishQuiz();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function finishQuiz() {
+            isQuizActive = false;
+            clearInterval(timerInterval);
+            
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+            
+            // Calculate score
+            let score = 0;
+            selectedAnswers.forEach((answer, index) => {
+                if (answer === quizData[index].correct) {
+                    score++;
+                }
+            });
+            
+            // Display results
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            document.getElementById('finalScore').textContent = score;
+            
+            const percentage = (score / quizData.length) * 100;
+            let message = '';
+            if (percentage >= 80) {
+                message = 'Excellent work! You\'re a quiz master!';
+            } else if (percentage >= 60) {
+                message = 'Good job! You did well!';
+            } else if (percentage >= 40) {
+                message = 'Not bad! Keep studying!';
+            } else {
+                message = 'Keep practicing! You can do better!';
+            }
+            
+            document.getElementById('scoreMessage').textContent = message;
+        }
+
+        function endQuizWithRejection() {
+            isQuizActive = false;
+            clearInterval(timerInterval);
+            
+            // Hide all other screens
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            
+            // Show rejection screen
+            rejectionScreen.style.display = 'flex';
+            
+            // Play rejection sound (if available)
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMbBjiS2vTNeSsFJXfH8N2QQAoUXrTp66hVFApGn+DyvmMb');
+                audio.play();
+            } catch (e) {
+                // Audio not supported
+            }
+        }  
+
+        function restartQuiz() {
+            // Reset everything
+            currentQuestionIndex = 0; 
+            selectedAnswers = [];
+            isQuizActive = false;
+             
+            // Hide results and show welcome
+            resultsScreen.classList.add('hidden');
+            rejectionScreen.style.display = 'none';
+            welcomeScreen.classList.remove('hidden');
+            
+            // Exit fullscreen if still active
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } 
+        }
+
+        // Initialize option buttons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const optionIndex = parseInt(this.dataset.option);
+                    selectOption(optionIndex);
+                });
+            });
+        });
+
+        // Prevent drag and drop
+        document.addEventListener('dragstart', function(e) {
+            if (isQuizActive) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable text selection during quiz
+        document.addEventListener('selectstart', function(e) {
+            if (isQuizActive) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
